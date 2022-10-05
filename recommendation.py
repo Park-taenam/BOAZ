@@ -13,8 +13,6 @@ from tqdm.notebook import tqdm
 import warnings
 warnings.filterwarnings('ignore')
 # %%
-<<<<<<< HEAD
-=======
 # data = pd.read_pickle('data.pkl')
 data_top1 = pd.read_csv('./data/mutandard_top1.csv', encoding='cp949', index_col=0)
 
@@ -53,4 +51,3 @@ y_pred = knn.predict(X_test)
 
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
->>>>>>> 3a78f81d8626f65fb4f8e4c2fa407c73a1dfe53c
