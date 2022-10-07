@@ -9,7 +9,7 @@ from tqdm import tqdm
 # %%
 data_top1_df = pd.read_csv('./data/mutandard_top1.csv', encoding='cp949', index_col=0)
 data_top2_df = pd.read_csv('./data/mutandard_top2.csv', encoding='cp949', index_col=0)
-data_top3_df = pd.read_csv('./data/mutandard_top3.csv', encoding='cp949', index_col=0)
+# data_top3_df = pd.read_csv('./data/mutandard_top3.csv', encoding='cp949', index_col=0)
 
 def preprocessing(data):
     data['height'] = [int(height.strip().split('c')[0]) for height in data['height']]
@@ -19,7 +19,7 @@ def preprocessing(data):
 
 data_top1_df = preprocessing(data_top1_df)
 data_top2_df = preprocessing(data_top2_df)
-data_top3_df = preprocessing(data_top3_df)
+# data_top3_df = preprocessing(data_top3_df)
 
 # %%
 ## 결측값 존재하는 행 제거
