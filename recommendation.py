@@ -31,12 +31,15 @@ from sklearn.metrics import classification_report, confusion_matrix
 from tqdm.notebook import tqdm
 import warnings
 warnings.filterwarnings('ignore')
+
 # %% Road and preprocessing data
 # data = pd.read_pickle('data.pkl')
 data_top1 = pd.read_csv('./data/mutandard_top1.csv',
                         encoding='cp949', index_col=0)
 
 # 데이터 전처리 함수
+
+
 def preprocessing(data):
     # height, weight 숫자로 변경
     data['height'] = [int(height.strip().split('c')[0])
@@ -51,6 +54,7 @@ def preprocessing(data):
     data["size_eval"] = pd.to_numeric(data["size_eval"])
 
     return data
+
 
 data_top1 = preprocessing(data_top1)
 
@@ -83,12 +87,23 @@ y_pred = knn.predict(X_test)
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
-# %%  
+# %%
 ## For each user
-pivot = data_top1.pivot_table("size_eval",index = "user",columns = "size") # 점수 부여 필요
+pivot = data_top1.pivot_table("size_eval", index="user", columns="size")  # 점수 부여 필요
 
 # 점수 부여하는 함수 구현 필요 **********************************************
 
+
+
+
+
+
+
+
+
+
+
+
 ## With categorization
 
-# %% 
+# %%

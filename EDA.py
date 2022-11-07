@@ -27,6 +27,7 @@ data_top1 = preprocessing(data_top1)
 data_top2 = preprocessing(data_top2)
 data_top3 = preprocessing(data_top3)
 
+# create pickle
 data = pd.concat([data_top1, data_top2, data_top3], axis=0)
 data.to_pickle('data.pkl')
 
