@@ -1,62 +1,47 @@
 '''
-Content : Recommendation System
+Content : Recommendation system - collaborative filtering
+Data : 20221114
 Author : Taenam
 '''
-# %% Import
-from nltk.corpus import stopwords
-import datetime
-from tqdm import tqdm_notebook, tqdm   # for문 진행상황 눈으로 확인 (loading bar)
-from PIL import Image
-from collections import Counter
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
-from nltk.tokenize import word_tokenize
-import nltk
-from konlpy.tag import *   # 모든 형태소분석기 import 하기
-import seaborn as sns
-import pandas as pd
-import numpy as np
-import os
-import sys
-import gc
-import re
-import io
-import matplotlib.pyplot as plt
 
-from sklearn.metrics.pairwise import cosine_similarity
+# %% Import
+# from nltk.corpus import stopwords
+# import datetime
+# from tqdm import tqdm_notebook, tqdm   # for문 진행상황 눈으로 확인 (loading bar)
+# from PIL import Image
+# from collections import Counter
+# from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+# from nltk.tokenize import word_tokenize
+# import nltk
+# from konlpy.tag import *   # 모든 형태소분석기 import 하기
+# import seaborn as sns
+# import pandas as pd
+# import numpy as np
+# import os
+# import sys
+# import gc
+# import re
+# import io
+# import matplotlib.pyplot as plt
+
+# from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
 from tqdm.notebook import tqdm
 import warnings
 warnings.filterwarnings('ignore')
 
 # %% Road and preprocessing data
-# data = pd.read_pickle('data.pkl')
-data_top1 = pd.read_csv('./data/mutandard_top1.csv',
-                        encoding='cp949', index_col=0)
+data = pd.read_pickle('./data/data.pkl')
 
-# 데이터 전처리 함수
-
-
-def preprocessing(data):
-    # height, weight 숫자로 변경
-    data['height'] = [int(height.strip().split('c')[0])
-                      for height in data['height']]
-    data['weight'] = [int(weight.strip().split('k')[0])
-                      for weight in data['weight']]
-
-    # 사이즈 평가
-    data["size_eval"] = data["size_eval"].replace('보통이에요', '0', regex=True)
-    data["size_eval"] = data["size_eval"].replace('커요', '1', regex=True)
-    data["size_eval"] = data["size_eval"].replace('작아요', '-1', regex=True)
-    data["size_eval"] = pd.to_numeric(data["size_eval"])
-
-    return data
-
-
-data_top1 = preprocessing(data_top1)
+data_top1 = data.iloc[:4944, :]
+data_top2 = data.iloc[4944:, :]
 
 # %% KNN + KNeighborsClassifier
 ## KNN Classifier
@@ -87,23 +72,34 @@ y_pred = knn.predict(X_test)
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
-# %%
-## For each user
-pivot = data_top1.pivot_table("size_eval", index="user", columns="size")  # 점수 부여 필요
+# %% New process
+## 수치 추가
+## https://www.musinsa.com/app/goods/1216295
+# outseam : 총장, waist : 허리단면, thigh : 허벅지 단면, rise : 밑위, hem : 밑단단면
+data_top1_size_lst = [[26, 92, 35, 27.3, 23.5, 16.5],
+                     [27, 92, 36.3, 27.9, 23.5, 16.8],
+                     [28, 93, 37.5, 28.5, 24, 17],
+                     [29, 93, 38.8, 29.1, 24, 17.3],
+                     [30, 94, 40, 29.8, 24.5, 17.5],
+                     [31, 94, 41.3, 30.4, 24.5, 17.8],
+                     [32, 94, 42.5, 31, 25, 18],
+                     [33, 94, 43.8, 31.6, 25.5, 18.3],
+                     [34, 95, 45, 32.3, 26, 18.5],
+                     [36, 95, 47.5, 33.5, 27, 19],
+                     [38, 96, 50, 34.8, 28, 19.5],
+                     [40, 96, 52.5, 36, 29, 20],
+                     [42, 97, 55, 37.3, 30, 20.5]]
+data_top1_size_df = pd.DataFrame(data_top1_size_lst, 
+                                 columns = ['size', 'outseam', 'waist', 'thigh', 'rise', 'hem'])
+data_top1 = pd.merge(data_top1, data_top1_size_df, on='size', how='inner')
 
-# 점수 부여하는 함수 구현 필요 **********************************************
+# gender imbalance여서 우선 제외
+data = data_top1.loc[:, ['height', 'weight', 'size_eval', 'outseam', 'waist', 'thigh', 'rise', 'hem']]
 
-
-
-
-
-
-
-
-
-
-
-
-## With categorization
+data_outseam = data.loc[:, ['height', 'weight', 'size_eval', 'outseam']]
+data_waist = data.loc[:, ['height', 'weight', 'size_eval', 'waist']]
+data_thigh = data.loc[:, ['height', 'weight', 'size_eval', 'thigh']]
+data_rise = data.loc[:, ['height', 'weight', 'size_eval', 'rise']]
+data_hem = data.loc[:, ['height', 'weight', 'size_eval', 'hem']]
 
 # %%
