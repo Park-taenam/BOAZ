@@ -2,6 +2,10 @@
 Content : Recommendation system - collaborative filtering
 Data : 20221114
 Author : Taenam
+Reference
+    pycaret install : https://github.com/pycaret/pycaret/issues/1260
+    pycaret example : https://pycaret.gitbook.io/docs/learn-pycaret/examples
+    pickle error : https://optilog.tistory.com/34
 '''
 
 # %% Import
@@ -25,6 +29,7 @@ Author : Taenam
 # import matplotlib.pyplot as plt
 
 # from sklearn.metrics.pairwise import cosine_similarity
+import pycaret.regression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
@@ -32,45 +37,44 @@ from sklearn.metrics import classification_report, confusion_matrix
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import EDA
 
 from tqdm.notebook import tqdm
 import warnings
 warnings.filterwarnings('ignore')
 
 # %% Road and preprocessing data
-data = pd.read_pickle('./data/data.pkl')
-
-data_top1 = data.iloc[:4944, :]
-data_top2 = data.iloc[4944:, :]
+data_top1 = pd.read_csv('./data/mutandard_top1.csv', encoding='cp949', index_col=0)
+data_top1 = EDA.preprocessing(data_top1)
 
 # %% KNN + KNeighborsClassifier
-## KNN Classifier
-X = data_top1.loc[:, ['height', 'weight']].values
-y = data_top1.loc[:, 'size'].values
+# ## KNN Classifier
+# X = data_top1.loc[:, ['height', 'weight']].values
+# y = data_top1.loc[:, 'size'].values
 
-scaler_x = StandardScaler()
-scaler_x.fit(X)
-X_scaled = scaler_x.transform(X)
+# scaler_x = StandardScaler()
+# scaler_x.fit(X)
+# X_scaled = scaler_x.transform(X)
 
-# plt.scatter(pd.DataFrame(X)[0], pd.DataFrame(X)[1])
-# plt.show()
-# plt.scatter(pd.DataFrame(X_scaled)[0], pd.DataFrame(X_scaled)[1])
-# plt.show()
+# # plt.scatter(pd.DataFrame(X)[0], pd.DataFrame(X)[1])
+# # plt.show()
+# # plt.scatter(pd.DataFrame(X_scaled)[0], pd.DataFrame(X_scaled)[1])
+# # plt.show()
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-scaler = StandardScaler()
-scaler.fit(X_train)
-X_train = scaler.transform(X_train)
-X_test = scaler.transform(X_test)
+# scaler = StandardScaler()
+# scaler.fit(X_train)
+# X_train = scaler.transform(X_train)
+# X_test = scaler.transform(X_test)
 
-knn = KNeighborsClassifier(n_neighbors=5)  # 하이퍼파라미터 조정 필요
-knn.fit(X_train, y_train)
+# knn = KNeighborsClassifier(n_neighbors=5)  # 하이퍼파라미터 조정 필요
+# knn.fit(X_train, y_train)
 
-y_pred = knn.predict(X_test)
+# y_pred = knn.predict(X_test)
 
-print(confusion_matrix(y_test, y_pred))
-print(classification_report(y_test, y_pred))
+# print(confusion_matrix(y_test, y_pred))
+# print(classification_report(y_test, y_pred))
 
 # %% New process
 ## 수치 추가
@@ -102,4 +106,34 @@ data_thigh = data.loc[:, ['height', 'weight', 'size_eval', 'thigh']]
 data_rise = data.loc[:, ['height', 'weight', 'size_eval', 'rise']]
 data_hem = data.loc[:, ['height', 'weight', 'size_eval', 'hem']]
 
+data_list = [data_outseam, data_waist, data_thigh, data_rise, data_rise]
+
+# %%
+## pycaret
+demo = pycaret.regression.setup(data = data_list[0], target = 'outseam', 
+                                # ignore_features = [],
+                                # normalize = True,
+                                # transformation= True,
+                                # transformation_method = 'yeo-johnson',
+                                # transform_target = True,
+                                # remove_outliers= True,
+                                # remove_multicollinearity = True,
+                                # ignore_low_variance = True,
+                                # combine_rare_levels = True
+                                ) 
+
+best = pycaret.regression.compare_models()
+# plot_model(best)
+# evaluate_model(best)
+
+# Creating models for the best estimators
+random_forest = pycaret.regression.create_model('rf')
+
+# # Tuning the created models 
+# random_forest = pycaret.tune_model(random_forest)
+
+# %%
+# # Finaliszing model for predictions 
+test_data = data_outseam.iloc[:10, :]
+predictions = pycaret.regression.predict_model(random_forest, data = test_data)
 # %%
