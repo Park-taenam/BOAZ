@@ -2,6 +2,7 @@
 Content : Recommendation system - collaborative filtering
 Data : 20221114
 Author : Taenam
+env : sizoah/pycaret_env
 Reference
     pycaret install : https://github.com/pycaret/pycaret/issues/1260
     pycaret example : https://pycaret.gitbook.io/docs/learn-pycaret/examples
@@ -29,17 +30,19 @@ Reference
 # import matplotlib.pyplot as plt
 
 # from sklearn.metrics.pairwise import cosine_similarity
-import pycaret.regression
+# import pycaret.regression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, mean_squared_error
+from sklearn.ensemble import RandomForestRegressor
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import EDA
 
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -108,32 +111,92 @@ data_hem = data.loc[:, ['height', 'weight', 'size_eval', 'hem']]
 
 data_list = [data_outseam, data_waist, data_thigh, data_rise, data_rise]
 
+# %% pycaret
+'''
+pycaret : 우선 보류
+'''
+# ## pycaret
+# demo = pycaret.regression.setup(data = data_list[0], target = 'outseam', 
+#                                 # ignore_features = [],
+#                                 # normalize = True,
+#                                 # transformation= True,
+#                                 # transformation_method = 'yeo-johnson',
+#                                 # transform_target = True,
+#                                 # remove_outliers= True,
+#                                 # remove_multicollinearity = True,
+#                                 # ignore_low_variance = True,
+#                                 # combine_rare_levels = True
+#                                 ) 
+
+# best = pycaret.regression.compare_models()
+# # plot_model(best)
+# # evaluate_model(best)
+
+# ## Creating models for the best estimators
+# random_forest = pycaret.regression.create_model('rf')
+
+# # ## Tuning the created models 
+# # random_forest = pycaret.tune_model(random_forest)
+
+# ## Finaliszing model for predictions 
+# test_data = data_outseam.iloc[:10, :]
+# predictions = pycaret.regression.predict_model(random_forest, data = test_data)
+
+# %% Phase 1
+'''
+pycaret에서 결과 가장 좋았던 random forest 사용
+'''
+X_outseam = data_list[0].iloc[:, :-1]
+y_outseam = data_list[0].iloc[:, -1]
+
+xTrain, xTest, yTrain, yTest = train_test_split(X_outseam, y_outseam, test_size = 0.3, random_state = 531)
+
+mseOos = []
+nTreeList = range(50, 500, 10)
+
+for iTrees in tqdm(nTreeList, desc='iterate list'):
+    depth = None
+    RFModel = RandomForestRegressor(n_estimators=iTrees,
+                                    max_depth=depth,
+                                    oob_score=False, 
+                                    random_state=531)
+    RFModel.fit(xTrain, yTrain)
+    
+    #데이터 세트에 대한 MSE 누적
+    prediction = RFModel.predict(xTest)
+    mseOos.append(mean_squared_error(yTest, prediction))
+
+# MSE visualization
+plt.plot(nTreeList, mseOos)
+plt.xlabel('Number of Trees in Ensemble')
+plt.ylabel('Mean Squared Error')
+#plot.ylim([0.0, 1.1*max(mseOob)])
+plt.show()
+
+regr = RandomForestRegressor(n_estimators = nTreeList[np.argmin(mseOos)],
+                             random_state=531)
+regr.fit(xTrain, yTrain)
+prediction = regr.predict(xTest)
+print(mean_squared_error(yTest, prediction))
+
 # %%
-## pycaret
-demo = pycaret.regression.setup(data = data_list[0], target = 'outseam', 
-                                # ignore_features = [],
-                                # normalize = True,
-                                # transformation= True,
-                                # transformation_method = 'yeo-johnson',
-                                # transform_target = True,
-                                # remove_outliers= True,
-                                # remove_multicollinearity = True,
-                                # ignore_low_variance = True,
-                                # combine_rare_levels = True
-                                ) 
+userTest = [[178, 76, 0]]
+prediction_user = regr.predict(userTest)
 
-best = pycaret.regression.compare_models()
-# plot_model(best)
-# evaluate_model(best)
-
-# Creating models for the best estimators
-random_forest = pycaret.regression.create_model('rf')
-
-# # Tuning the created models 
-# random_forest = pycaret.tune_model(random_forest)
 
 # %%
-# # Finaliszing model for predictions 
-test_data = data_outseam.iloc[:10, :]
-predictions = pycaret.regression.predict_model(random_forest, data = test_data)
-# %%
+def find_nearest(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return array[idx]
+
+
+def df_coloring(value):
+    highlight = 'background-color : darkorange;'
+    default = ''
+
+    if find_nearest(data_top1_size_df.loc[:, 'outseam'], prediction_user) == value:
+        return highlight
+    return default
+
+data_top1_size_df.style.applymap(df_coloring)
