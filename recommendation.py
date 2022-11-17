@@ -7,6 +7,7 @@ Reference
     pycaret install : https://github.com/pycaret/pycaret/issues/1260
     pycaret example : https://pycaret.gitbook.io/docs/learn-pycaret/examples
     pickle error : https://optilog.tistory.com/34
+    pandas df style : https://pandas.pydata.org/docs/dev/reference/api/pandas.io.formats.style.Styler.pipe.html
 '''
 
 # %% Import
@@ -109,7 +110,7 @@ data_thigh = data.loc[:, ['height', 'weight', 'size_eval', 'thigh']]
 data_rise = data.loc[:, ['height', 'weight', 'size_eval', 'rise']]
 data_hem = data.loc[:, ['height', 'weight', 'size_eval', 'hem']]
 
-data_list = [data_outseam, data_waist, data_thigh, data_rise, data_rise]
+data_list = [data_outseam, data_waist, data_thigh, data_rise, data_hem]
 
 # %% pycaret
 '''
@@ -146,45 +147,137 @@ pycaret : 우선 보류
 '''
 pycaret에서 결과 가장 좋았던 random forest 사용
 '''
-X_outseam = data_list[0].iloc[:, :-1]
-y_outseam = data_list[0].iloc[:, -1]
+# ## outseam
+# X_outseam = data_list[0].iloc[:, :-1]
+# y_outseam = data_list[0].iloc[:, -1]
 
-xTrain, xTest, yTrain, yTest = train_test_split(X_outseam, y_outseam, test_size = 0.3, random_state = 531)
+# xTrain, xTest, yTrain, yTest = train_test_split(X_outseam, y_outseam, test_size = 0.3, random_state = 531)
 
-mseOos = []
-nTreeList = range(50, 500, 10)
+# mseOos = []
+# nTreeList = range(50, 500, 10)
 
-for iTrees in tqdm(nTreeList, desc='iterate list'):
-    depth = None
-    RFModel = RandomForestRegressor(n_estimators=iTrees,
-                                    max_depth=depth,
-                                    oob_score=False, 
-                                    random_state=531)
-    RFModel.fit(xTrain, yTrain)
+# for iTrees in tqdm(nTreeList, desc='iterate list'):
+#     depth = None
+#     RFModel = RandomForestRegressor(n_estimators=iTrees,
+#                                     max_depth=depth,
+#                                     oob_score=False, 
+#                                     random_state=531)
+#     RFModel.fit(xTrain, yTrain)
     
-    #데이터 세트에 대한 MSE 누적
-    prediction = RFModel.predict(xTest)
-    mseOos.append(mean_squared_error(yTest, prediction))
+#     #데이터 세트에 대한 MSE 누적
+#     prediction = RFModel.predict(xTest)
+#     mseOos.append(mean_squared_error(yTest, prediction))
 
-# MSE visualization
-plt.plot(nTreeList, mseOos)
-plt.xlabel('Number of Trees in Ensemble')
-plt.ylabel('Mean Squared Error')
-#plot.ylim([0.0, 1.1*max(mseOob)])
-plt.show()
+# # MSE visualization
+# plt.plot(nTreeList, mseOos)
+# plt.xlabel('Number of Trees in Ensemble')
+# plt.ylabel('Mean Squared Error')
+# #plot.ylim([0.0, 1.1*max(mseOob)])
+# plt.show()
 
-regr = RandomForestRegressor(n_estimators = nTreeList[np.argmin(mseOos)],
+# regr = RandomForestRegressor(n_estimators = nTreeList[np.argmin(mseOos)],
+#                              random_state=531)
+# regr.fit(xTrain, yTrain)
+# prediction = regr.predict(xTest)
+# print(mean_squared_error(yTest, prediction))
+
+# userTest = [[178, 76, 0]]
+# prediction_user = regr.predict(userTest)
+
+# %%
+user_pred_list = []
+for i in tqdm(range(len(data_list))):
+    X = data_list[i].iloc[:, :-1]
+    y = data_list[i].iloc[:, -1]
+
+    xTrain, xTest, yTrain, yTest = train_test_split(X, y, test_size = 0.3, random_state = 531)
+    
+    mseOos = []
+    nTreeList = range(50, 500, 10)
+
+    for iTrees in tqdm(nTreeList, desc='iterate list'):
+        depth = None
+        RFModel = RandomForestRegressor(n_estimators=iTrees,
+                                        max_depth=depth,
+                                        oob_score=False, 
+                                        random_state=531)
+        RFModel.fit(xTrain, yTrain)
+        
+        #데이터 세트에 대한 MSE 누적
+        prediction = RFModel.predict(xTest)
+        mseOos.append(mean_squared_error(yTest, prediction))
+        
+    regr = RandomForestRegressor(n_estimators = nTreeList[np.argmin(mseOos)],
                              random_state=531)
-regr.fit(xTrain, yTrain)
-prediction = regr.predict(xTest)
-print(mean_squared_error(yTest, prediction))
+    regr.fit(xTrain, yTrain)
+    userTest = [[178, 76, 0]]
+    prediction_user = regr.predict(userTest)
+    user_pred_list.append(prediction_user)
+    
+    
 
 # %%
-userTest = [[178, 76, 0]]
-prediction_user = regr.predict(userTest)
+'''
+하나의 dataframe에 어떻게 표현하지............
+'''
+def find_nearest(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return array[idx]
 
 
+def df_coloring_0(value):
+    highlight = 'background-color : darkorange;'
+    default = ''
+
+    if find_nearest(data_top1_size_df.loc[:,'outseam'], user_pred_list[0]) == value:
+        return highlight
+    return default
+
+def df_coloring_1(value):
+    highlight = 'background-color : darkorange;'
+    default = ''
+
+    if find_nearest(data_top1_size_df.loc[:,'waist'], user_pred_list[1]) == value:
+        return highlight
+    return default
+
+def df_coloring_2(value):
+    highlight = 'background-color : darkorange;'
+    default = ''
+
+    if find_nearest(data_top1_size_df.loc[:,'thigh'], user_pred_list[2]) == value:
+        return highlight
+    return default
+
+def df_coloring_3(value):
+    highlight = 'background-color : darkorange;'
+    default = ''
+
+    if find_nearest(data_top1_size_df.loc[:,'rise'], user_pred_list[3]) == value:
+        return highlight
+    return default
+
+def df_coloring_4(value):
+    highlight = 'background-color : darkorange;'
+    default = ''
+
+    if find_nearest(data_top1_size_df.loc[:,'hem'], user_pred_list[4]) == value:
+        return highlight
+    return default
+
+df_outseam = pd.DataFrame(data_top1_size_df.loc[:,'outseam']).style.applymap(df_coloring_0)
+df_waist = pd.DataFrame(data_top1_size_df.loc[:,'waist']).style.applymap(df_coloring_1)
+df_thigh = pd.DataFrame(data_top1_size_df.loc[:,'thigh']).style.applymap(df_coloring_2)
+df_rise = pd.DataFrame(data_top1_size_df.loc[:,'rise']).style.applymap(df_coloring_3)
+df_hem = pd.DataFrame(data_top1_size_df.loc[:,'hem']).style.applymap(df_coloring_4)
+
+# df_user_rec = pd.concat([df_outseam, df_waist, df_thigh, df_rise, df_hem])
+df_outseam.concat(df_waist)
 # %%
+'''
+안됨...
+'''
 def find_nearest(array, value):
     array = np.asarray(array)
     idx = (np.abs(array - value)).argmin()
@@ -194,9 +287,15 @@ def find_nearest(array, value):
 def df_coloring(value):
     highlight = 'background-color : darkorange;'
     default = ''
-
-    if find_nearest(data_top1_size_df.loc[:, 'outseam'], prediction_user) == value:
-        return highlight
-    return default
+    
+    if value.columns == 'outseam':
+        if find_nearest(data_top1_size_df.loc[:,'outseam'], user_pred_list[0]) == value:
+            return highlight
+        return default
+    elif value.columns == 'waist':
+        if find_nearest(data_top1_size_df.loc[:,'waist'], user_pred_list[1]) == value:
+            return highlight
+        return default
 
 data_top1_size_df.style.applymap(df_coloring)
+# %%
