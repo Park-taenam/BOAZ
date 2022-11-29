@@ -1,13 +1,14 @@
 '''
 Content : Recommendation system - collaborative filtering
-Data : 20221114
+Data : 221114
 Author : Taenam
 env : sizoah/pycaret_env
 Reference
     pycaret install : https://github.com/pycaret/pycaret/issues/1260
     pycaret example : https://pycaret.gitbook.io/docs/learn-pycaret/examples
     pickle error : https://optilog.tistory.com/34
-    pandas df style : https://pandas.pydata.org/docs/dev/reference/api/pandas.io.formats.style.Styler.pipe.html
+    coloring cells in pandas
+      * - https://queirozf.com/entries/pandas-dataframe-examples-styling-cells-and-conditional-formatting
 '''
 
 # %% Import
@@ -48,8 +49,12 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # %% Road and preprocessing data
-data_top1 = pd.read_csv('./data/mutandard_top1.csv', encoding='cp949', index_col=0)
-data_top1 = EDA.preprocessing(data_top1)
+# data_top1 = pd.read_csv('./data/mutandard_top1.csv', encoding='cp949', index_col=0)
+# data_top1 = EDA.preprocessing(data_top1)
+
+hood_df = pd.read_csv('./data/hoodTop5FigureTest.csv')
+hood_df = hood_df.iloc[:, 2:]
+hood_df = EDA.preprocessing(hood_df)
 
 # %% KNN + KNeighborsClassifier
 # ## KNN Classifier
@@ -84,34 +89,40 @@ data_top1 = EDA.preprocessing(data_top1)
 ## 수치 추가
 ## https://www.musinsa.com/app/goods/1216295
 # outseam : 총장, waist : 허리단면, thigh : 허벅지 단면, rise : 밑위, hem : 밑단단면
-data_top1_size_lst = [[26, 92, 35, 27.3, 23.5, 16.5],
-                     [27, 92, 36.3, 27.9, 23.5, 16.8],
-                     [28, 93, 37.5, 28.5, 24, 17],
-                     [29, 93, 38.8, 29.1, 24, 17.3],
-                     [30, 94, 40, 29.8, 24.5, 17.5],
-                     [31, 94, 41.3, 30.4, 24.5, 17.8],
-                     [32, 94, 42.5, 31, 25, 18],
-                     [33, 94, 43.8, 31.6, 25.5, 18.3],
-                     [34, 95, 45, 32.3, 26, 18.5],
-                     [36, 95, 47.5, 33.5, 27, 19],
-                     [38, 96, 50, 34.8, 28, 19.5],
-                     [40, 96, 52.5, 36, 29, 20],
-                     [42, 97, 55, 37.3, 30, 20.5]]
-data_top1_size_df = pd.DataFrame(data_top1_size_lst, 
-                                 columns = ['size', 'outseam', 'waist', 'thigh', 'rise', 'hem'])
-data_top1 = pd.merge(data_top1, data_top1_size_df, on='size', how='inner')
+# data_top1_size_lst = [[26, 92, 35, 27.3, 23.5, 16.5],
+#                      [27, 92, 36.3, 27.9, 23.5, 16.8],
+#                      [28, 93, 37.5, 28.5, 24, 17],
+#                      [29, 93, 38.8, 29.1, 24, 17.3],
+#                      [30, 94, 40, 29.8, 24.5, 17.5],
+#                      [31, 94, 41.3, 30.4, 24.5, 17.8],
+#                      [32, 94, 42.5, 31, 25, 18],
+#                      [33, 94, 43.8, 31.6, 25.5, 18.3],
+#                      [34, 95, 45, 32.3, 26, 18.5],
+#                      [36, 95, 47.5, 33.5, 27, 19],
+#                      [38, 96, 50, 34.8, 28, 19.5],
+#                      [40, 96, 52.5, 36, 29, 20],
+#                      [42, 97, 55, 37.3, 30, 20.5]]
+# data_top1_size_df = pd.DataFrame(data_top1_size_lst, 
+#                                  columns = ['size', 'outseam', 'waist', 'thigh', 'rise', 'hem'])
+# data_top1 = pd.merge(data_top1, data_top1_size_df, on='size', how='inner')
 
-# gender imbalance여서 우선 제외
-data = data_top1.loc[:, ['height', 'weight', 'size_eval', 'outseam', 'waist', 'thigh', 'rise', 'hem']]
+# # gender imbalance여서 우선 제외
+# data = data_top1.loc[:, ['height', 'weight', 'size_eval', 'outseam', 'waist', 'thigh', 'rise', 'hem']]
 
-data_outseam = data.loc[:, ['height', 'weight', 'size_eval', 'outseam']]
-data_waist = data.loc[:, ['height', 'weight', 'size_eval', 'waist']]
-data_thigh = data.loc[:, ['height', 'weight', 'size_eval', 'thigh']]
-data_rise = data.loc[:, ['height', 'weight', 'size_eval', 'rise']]
-data_hem = data.loc[:, ['height', 'weight', 'size_eval', 'hem']]
+# data_outseam = data.loc[:, ['height', 'weight', 'size_eval', 'outseam']]
+# data_waist = data.loc[:, ['height', 'weight', 'size_eval', 'waist']]
+# data_thigh = data.loc[:, ['height', 'weight', 'size_eval', 'thigh']]
+# data_rise = data.loc[:, ['height', 'weight', 'size_eval', 'rise']]
+# data_hem = data.loc[:, ['height', 'weight', 'size_eval', 'hem']]
 
-data_list = [data_outseam, data_waist, data_thigh, data_rise, data_hem]
+# data_list = [data_outseam, data_waist, data_thigh, data_rise, data_hem]
 
+hood_df_length = hood_df.loc[:, ['height', 'weight', '총장']]
+hood_df_shoulder = hood_df.loc[:, ['height', 'weight', '어깨너비']]
+hood_df_bl = hood_df.loc[:, ['height', 'weight', '가슴단면']] # bust line
+hood_df_sleeve = hood_df.loc[:, ['height', 'weight', '소매길이']]
+
+hood_df_lst = [hood_df_length, hood_df_shoulder, hood_df_bl, hood_df_sleeve]
 # %% pycaret
 '''
 pycaret : 우선 보류
@@ -186,11 +197,11 @@ pycaret에서 결과 가장 좋았던 random forest 사용
 
 # %%
 user_pred_list = []
-for i in tqdm(range(len(data_list))):
-    X = data_list[i].iloc[:, :-1]
-    y = data_list[i].iloc[:, -1]
+for i in range(len(hood_df_lst)):
+    X = hood_df_lst[i].iloc[:, :-1]
+    y = hood_df_lst[i].iloc[:, -1]
 
-    xTrain, xTest, yTrain, yTest = train_test_split(X, y, test_size = 0.3, random_state = 531)
+    xTrain, xTest, yTrain, yTest = train_test_split(X, y, test_size = 0.2, random_state = 531)
     
     mseOos = []
     nTreeList = range(50, 500, 10)
@@ -210,92 +221,62 @@ for i in tqdm(range(len(data_list))):
     regr = RandomForestRegressor(n_estimators = nTreeList[np.argmin(mseOos)],
                              random_state=531)
     regr.fit(xTrain, yTrain)
-    userTest = [[178, 76, 0]]
+    
+    prediction = regr.predict(xTest)
+    print("MSE of {}'s Model : {}".format(hood_df_lst[i].columns[-1], mean_squared_error(yTest, prediction)))
+    
+    userTest = [[178, 76]]
     prediction_user = regr.predict(userTest)
     user_pred_list.append(prediction_user)
-    
-    
-
+    print("User Test of {}'s Model : {}".format(hood_df_lst[i].columns[-1], prediction_user))
 # %%
 '''
-하나의 dataframe에 어떻게 표현하지............
+원하는 옷의 치수 정보에 가장 가까운 값 표시
 '''
+## 예시 https://www.musinsa.com/app/goods/2758349
+hood_size_df = pd.DataFrame([['S', 65, 48, 58, 64],
+                            ['M', 67.5, 50, 60.5, 65.5],
+                            ['L', 70, 52, 63, 67],
+                            ['XL', 72.5, 54, 65.5, 68.5]], columns=["size", "총장", "어깨너비", "가슴단면", "소매길이"])
+hood_size_df = hood_size_df.iloc[:, 1:]
+hood_col_dict = {0:"총장", 1:"어깨너비", 2:"가슴단면", 3:"소매길이"}
+
 def find_nearest(array, value):
     array = np.asarray(array)
     idx = (np.abs(array - value)).argmin()
     return array[idx]
 
-
-def df_coloring_0(value):
-    highlight = 'background-color : darkorange;'
-    default = ''
-
-    if find_nearest(data_top1_size_df.loc[:,'outseam'], user_pred_list[0]) == value:
-        return highlight
-    return default
-
-def df_coloring_1(value):
-    highlight = 'background-color : darkorange;'
-    default = ''
-
-    if find_nearest(data_top1_size_df.loc[:,'waist'], user_pred_list[1]) == value:
-        return highlight
-    return default
-
-def df_coloring_2(value):
-    highlight = 'background-color : darkorange;'
-    default = ''
-
-    if find_nearest(data_top1_size_df.loc[:,'thigh'], user_pred_list[2]) == value:
-        return highlight
-    return default
-
-def df_coloring_3(value):
-    highlight = 'background-color : darkorange;'
-    default = ''
-
-    if find_nearest(data_top1_size_df.loc[:,'rise'], user_pred_list[3]) == value:
-        return highlight
-    return default
-
-def df_coloring_4(value):
-    highlight = 'background-color : darkorange;'
-    default = ''
-
-    if find_nearest(data_top1_size_df.loc[:,'hem'], user_pred_list[4]) == value:
-        return highlight
-    return default
-
-df_outseam = pd.DataFrame(data_top1_size_df.loc[:,'outseam']).style.applymap(df_coloring_0)
-df_waist = pd.DataFrame(data_top1_size_df.loc[:,'waist']).style.applymap(df_coloring_1)
-df_thigh = pd.DataFrame(data_top1_size_df.loc[:,'thigh']).style.applymap(df_coloring_2)
-df_rise = pd.DataFrame(data_top1_size_df.loc[:,'rise']).style.applymap(df_coloring_3)
-df_hem = pd.DataFrame(data_top1_size_df.loc[:,'hem']).style.applymap(df_coloring_4)
-
-# df_user_rec = pd.concat([df_outseam, df_waist, df_thigh, df_rise, df_hem])
-df_outseam.concat(df_waist)
-# %%
-'''
-안됨...
-'''
-def find_nearest(array, value):
-    array = np.asarray(array)
-    idx = (np.abs(array - value)).argmin()
-    return array[idx]
-
-
-def df_coloring(value):
+def df_coloring_length(series):
     highlight = 'background-color : darkorange;'
     default = ''
     
-    if value.columns == 'outseam':
-        if find_nearest(data_top1_size_df.loc[:,'outseam'], user_pred_list[0]) == value:
-            return highlight
-        return default
-    elif value.columns == 'waist':
-        if find_nearest(data_top1_size_df.loc[:,'waist'], user_pred_list[1]) == value:
-            return highlight
-        return default
+    nearest_value = find_nearest(series, user_pred_list[0])
+    
+    return [highlight if e == nearest_value else default for e in series]
 
-data_top1_size_df.style.applymap(df_coloring)
-# %%
+def df_coloring_shoulder(series):
+    highlight = 'background-color : darkorange;'
+    default = ''
+    
+    nearest_value = find_nearest(series, user_pred_list[1])
+    
+    return [highlight if e == nearest_value else default for e in series]
+
+def df_coloring_bl(series):
+    highlight = 'background-color : darkorange;'
+    default = ''
+    
+    nearest_value = find_nearest(series, user_pred_list[2])
+    
+    return [highlight if e == nearest_value else default for e in series]
+
+def df_coloring_sleeve(series):
+    highlight = 'background-color : darkorange;'
+    default = ''
+    
+    nearest_value = find_nearest(series, user_pred_list[3])
+    
+    return [highlight if e == nearest_value else default for e in series]
+
+
+hood_size_df.style.apply(df_coloring_length, subset=["총장"], axis=0).apply(df_coloring_shoulder, subset=["어깨너비"], axis=0).apply(df_coloring_bl, subset=["가슴단면"], axis=0).apply(df_coloring_sleeve, subset=["소매길이"], axis=0)
