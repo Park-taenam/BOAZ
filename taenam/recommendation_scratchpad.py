@@ -365,5 +365,4 @@ print("Euclidean distance : {}".format(np.round(dist_lst,3)))
 print("추천 사이즈 : {}".format(hood_size_df.index[np.argmin(dist_lst)]))
 hood_size_df.style.apply(df_coloring_length, subset=["총장"], axis=0).apply(df_coloring_shoulder, subset=["어깨너비"], axis=0).apply(df_coloring_bl, subset=["가슴단면"], axis=0).apply(df_coloring_sleeve, subset=["소매길이"], axis=0)
 
-
 # %%
