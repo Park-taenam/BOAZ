@@ -131,7 +131,7 @@ def move_arrow(driver):
 
 # %%
 ##########################크롤링시작##############################
-#----------바꿀변수-------------#
+#-----------------------# :바꿀변수표시창입니다.
  
 final_df = pd.DataFrame() 
 #8페이지
@@ -146,12 +146,13 @@ start = time.time()
 math.factorial(100000)
 
 #-----------------item_cnt: 상품개수 + 1로 바꾸기 #90개-> 91------------#
-item_cnt = 91 
+item_cnt = 51 
 #-----------------range(시작아이템개수,,)바꾸기------------------------#
 for t in range(1,item_cnt,1):
     #후기순 90개 자동으로 클릭하기
 # #searchList > li:nth-child(1) > div.li_inner > div.list_img > a > img
 # #searchList > li:nth-child(90) > div.li_inner > div.list_img > a > img
+    
     try: 
         driver.find_element_by_css_selector('#searchList > li:nth-child(' +
                                             str(int(t)) +
@@ -159,6 +160,7 @@ for t in range(1,item_cnt,1):
         time.sleep(2)
     except:
         continue
+   
 #일단 빈공간 클릭->창이 랜덤으로 뜨기 때문에 빈곳을 클릭하면 팝업이 뜨는 경우가 있음
     driver.find_element_by_xpath('//*[@id="product_order_info"]/div[1]/h4')
     time.sleep(2)
@@ -249,7 +251,7 @@ for t in range(1,item_cnt,1):
     final_df = pd.concat([final_df, globals()["merge_df"+str(a)]])
     #뒤로가기
     driver.back()
-    time.sleep(2)
+    time.sleep(3)
           
 
 
@@ -261,5 +263,6 @@ driver.quit()
 
 # %%
 #------------------파일이름바꾸기-----------------------------#
-final_df.to_csv("data/78_90_8page.csv", encoding="UTF-8", index=False)
+final_df.to_csv("data/40_50_8page.csv", encoding="UTF-8", index=False)
+
 # %%
