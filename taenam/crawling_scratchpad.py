@@ -202,12 +202,12 @@ def get_item_content(driver, reviewNum):
             
     return item_review_df
     
-def get_data(driver, item_cnt):
+def get_data(driver, start_item, item_cnt):
     
     final_df = pd.DataFrame() # item 90개 정보 담은 최종 DataFrame
     
     # 후기순 90개 자동으로 클릭하기
-    for t in tqdm(range(1,item_cnt+1,1), desc = "Description"):
+    for t in tqdm(range(start_item, item_cnt+1,1), desc = "Description"):
         print("Item {} : ".format(t), end = " ")
         ## 상품 클릭
         try: 
@@ -216,6 +216,7 @@ def get_data(driver, item_cnt):
             driver.find_element_by_css_selector('#searchList > li:nth-child(' + str(int(t)) + ') > div.li_inner > div.list_img > a > img').click()
             time.sleep(2)
         except:
+            print("item click issue")
             continue
         
         ## 팝업 처리
@@ -265,31 +266,36 @@ def get_data(driver, item_cnt):
         
         #뒤로가기
         driver.back()
-        time.sleep(2)
+        time.sleep(5)
 
     return final_df
 
 # %%
 if __name__=='__main__':
     # page url Dict
-    page_dict = {4: 'https://www.musinsa.com/categories/item/001004?d_cat_cd=001004&brand=&list_kind=small&sort=emt_high&sub_sort=&page=4&display_cnt=90&group_sale=&exclusive_yn=&sale_goods=&timesale_yn=&ex_soldout=&kids=&color=&price1=&price2=&shoeSizeOption=&tags=&campaign_id=&includeKeywords=&measure='}
+    page = 4
+    page_url = 'https://www.musinsa.com/categories/item/001004?d_cat_cd=001004&brand=&list_kind=small&sort=emt_high&sub_sort=&page=' + str(page) + '&display_cnt=90&group_sale=&exclusive_yn=&sale_goods=&timesale_yn=&ex_soldout=&kids=&color=&price1=&price2=&shoeSizeOption=&tags=&campaign_id=&includeKeywords=&measure='
     
     options = webdriver.ChromeOptions()
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    driver = webdriver.Chrome(options=options)
+    options.add_experimental_option("detach", True) # 마지막에 창 안닫히게
     
-    driver.get(page_dict[4])
+    driver = webdriver.Chrome("./chromedriver.exe", options=options)
+    
+    driver.get(page_url)
     time.sleep(2)
 
     start = time.time()
     math.factorial(100000) # 이건 왜 있는거지 (다정)
 
+    start_item = 14 # 1, 14
     item_cnt = 90
     # re_cnt = 100  # 기준으로 잡은 스타일후기리뷰 개수 (우선 생략)
     
     # 크롤링 진행
-    final_df = get_data(driver, item_cnt)
+    final_df = get_data(driver, start_item, item_cnt)
 
+    # 창 종료
     driver.quit()  
     
     final_df.drop_duplicates(subset = None, keep = 'first', inplace = True, ignore_index = True) #중복아이템 제거
