@@ -205,11 +205,12 @@ def get_item_content(driver, reviewNum):
             
     return item_review_df
     
+
 def get_data(driver, page_url, start_item, item_cnt):
-    
     final_df = pd.DataFrame() # item 90개 정보 담은 최종 DataFrame
     
     # 후기순 90개 자동으로 클릭하기
+
     for t in tqdm(range(start_item, item_cnt+1,1), desc = "Description"):
         print("Item {} : ".format(t), end = " ")
         ## 상품 클릭
@@ -276,7 +277,6 @@ def get_data(driver, page_url, start_item, item_cnt):
 
 # %%
 if __name__=='__main__':
-    # page url Dict
     page = 4
     page_url = 'https://www.musinsa.com/categories/item/001004?d_cat_cd=001004&brand=&list_kind=small&sort=emt_high&sub_sort=&page={}&display_cnt=90&group_sale=&exclusive_yn=&sale_goods=&timesale_yn=&ex_soldout=&kids=&color=&price1=&price2=&shoeSizeOption=&tags=&campaign_id=&includeKeywords=&measure='.format(str(page))
     
