@@ -3,15 +3,16 @@ Title : Crawling
 Author : Taenam
 
 변경사항 :
-    - 리뷰 개수 100개 넘어야 돌아가는 코드 없앰
+    - 리뷰 개수 100개 넘어야 돌아가는 코드 없앰 -> 100개 이하 : 다 긁어옴, 100개 이상 : 100개 긁어옴
     - 상품 개수 +1 하는 과정 돌아가는 코드 안으로 넣음
+    - 상품 시작 번호 parameter로 추가
+    - 상품 클릭 a 태그에서 클릭하는 걸로 변경
+    - 뒤로 가기 없애고 다시 시작 url로 가는 걸로 변경
     
 Error : 
     - AttributeError: module 'collections' has no attribute 'Callable'
         https://stackoverflow.com/questions/69515086/error-attributeerror-collections-has-no-attribute-callable-using-beautifu
 
-Reference :
-    
 '''
 
 # %%
@@ -142,14 +143,16 @@ def get_item_content(driver, reviewNum):
     # 첫 페이지
     page_cnt = 1
     print(page_cnt, end=" ")
-    user_list, gender_list, height_list, weight_list, item_list, size_list, content_list, star_list, size_eval_list, bright_eval_list, color_eval_list, thick_eval_list = get_review_content(driver, 10)
+    if page_cnt == lastPage:
+        user_list, gender_list, height_list, weight_list, item_list, size_list, content_list, star_list, size_eval_list, bright_eval_list, color_eval_list, thick_eval_list = get_review_content(driver, lastPage_review_num)
+    else:
+        user_list, gender_list, height_list, weight_list, item_list, size_list, content_list, star_list, size_eval_list, bright_eval_list, color_eval_list, thick_eval_list = get_review_content(driver, 10)
 
     for i in range(2):
         for j in range(4, 9 ,1):
             
             if page_cnt >= 10: # 리뷰 100개만 긁어야하니 stop
                 break
-            
             if page_cnt == lastPage: # 리뷰가 100개 이하면 마지막 페이지에서 더 이상 못 넘기므로 stop
                 break
             
@@ -202,7 +205,7 @@ def get_item_content(driver, reviewNum):
             
     return item_review_df
     
-def get_data(driver, start_item, item_cnt):
+def get_data(driver, page_url, start_item, item_cnt):
     
     final_df = pd.DataFrame() # item 90개 정보 담은 최종 DataFrame
     
@@ -213,7 +216,7 @@ def get_data(driver, start_item, item_cnt):
         try: 
             # #searchList > li:nth-child(1) > div.li_inner > div.list_img > a > img
             # #searchList > li:nth-child(90) > div.li_inner > div.list_img > a > img
-            driver.find_element_by_css_selector('#searchList > li:nth-child(' + str(int(t)) + ') > div.li_inner > div.list_img > a > img').click()
+            driver.find_element_by_css_selector('#searchList > li:nth-child(' + str(t) + ') > div.li_inner > div.list_img > a').click()
             time.sleep(2)
         except:
             print("item click issue")
@@ -246,6 +249,7 @@ def get_data(driver, start_item, item_cnt):
         except:
             print("사이즈표 오류발생")
             
+            
         ## 리뷰개수 체크
         try:
             reviewNum = driver.find_element_by_xpath('//*[@id="estimate_style"]')
@@ -265,8 +269,8 @@ def get_data(driver, start_item, item_cnt):
         final_df = pd.concat([final_df, merge_df])
         
         #뒤로가기
-        driver.back()
-        time.sleep(5)
+        driver.get(page_url)
+        time.sleep(2)
 
     return final_df
 
@@ -274,7 +278,7 @@ def get_data(driver, start_item, item_cnt):
 if __name__=='__main__':
     # page url Dict
     page = 4
-    page_url = 'https://www.musinsa.com/categories/item/001004?d_cat_cd=001004&brand=&list_kind=small&sort=emt_high&sub_sort=&page=' + str(page) + '&display_cnt=90&group_sale=&exclusive_yn=&sale_goods=&timesale_yn=&ex_soldout=&kids=&color=&price1=&price2=&shoeSizeOption=&tags=&campaign_id=&includeKeywords=&measure='
+    page_url = 'https://www.musinsa.com/categories/item/001004?d_cat_cd=001004&brand=&list_kind=small&sort=emt_high&sub_sort=&page={}&display_cnt=90&group_sale=&exclusive_yn=&sale_goods=&timesale_yn=&ex_soldout=&kids=&color=&price1=&price2=&shoeSizeOption=&tags=&campaign_id=&includeKeywords=&measure='.format(str(page))
     
     options = webdriver.ChromeOptions()
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
@@ -286,19 +290,18 @@ if __name__=='__main__':
     time.sleep(2)
 
     start = time.time()
-    math.factorial(100000) # 이건 왜 있는거지 (다정)
 
-    start_item = 14 # 1, 14
+    start_item = 1
     item_cnt = 90
     # re_cnt = 100  # 기준으로 잡은 스타일후기리뷰 개수 (우선 생략)
     
     # 크롤링 진행
-    final_df = get_data(driver, start_item, item_cnt)
+    final_df = get_data(driver, page_url, start_item, item_cnt)
 
     # 창 종료
     driver.quit()  
     
-    final_df.drop_duplicates(subset = None, keep = 'first', inplace = True, ignore_index = True) #중복아이템 제거
+    # final_df.drop_duplicates(subset = None, keep = 'first', inplace = True, ignore_index = True) # 중복아이템 제거 (나중에 합치고 체크)
     print('최종개수:',final_df.shape) #최종 data: final_df
     
     end = time.time()
