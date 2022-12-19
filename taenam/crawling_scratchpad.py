@@ -204,7 +204,6 @@ def get_item_content(driver, reviewNum):
                                    'thick_eval':thick_eval_list})
             
     return item_review_df
-    
 
 def get_data(driver, page_url, start_item, item_cnt):
     final_df = pd.DataFrame() # item 90개 정보 담은 최종 DataFrame
@@ -277,7 +276,10 @@ def get_data(driver, page_url, start_item, item_cnt):
 
 # %%
 if __name__=='__main__':
-    page = 4
+    # page = 4
+    # page = 8
+    # page = 12
+    page = 16
     page_url = 'https://www.musinsa.com/categories/item/001004?d_cat_cd=001004&brand=&list_kind=small&sort=emt_high&sub_sort=&page={}&display_cnt=90&group_sale=&exclusive_yn=&sale_goods=&timesale_yn=&ex_soldout=&kids=&color=&price1=&price2=&shoeSizeOption=&tags=&campaign_id=&includeKeywords=&measure='.format(str(page))
     
     options = webdriver.ChromeOptions()
@@ -308,6 +310,9 @@ if __name__=='__main__':
     print("{:.5f} sec".format(end-start))
 
     # csv로 저장
-    final_df.to_csv("../data/hood_4page.csv", encoding="UTF-8", index=False)
+    # final_df.to_csv("../data/hood_4page.csv", encoding="UTF-8", index=False)
+    # final_df.to_csv("../data/hood_8page.csv", encoding="UTF-8", index=False)
+    # final_df.to_csv("../data/hood_12page.csv", encoding="UTF-8", index=False)
+    final_df.to_csv("../data/hood_16page.csv", encoding="UTF-8", index=False)
     
 # %%
