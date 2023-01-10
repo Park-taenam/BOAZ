@@ -24,23 +24,124 @@ import matplotlib
 matplotlib.rcParams['font.family'] ='Malgun Gothic'
 matplotlib.rcParams['axes.unicode_minus'] =False
 
-# %%
-df = pd.DataFrame()
-for i in range(1,21,1):
-    try:
-        df_before = pd.read_csv('data/hood_'+str(i)+'page.csv') #Å©·Ñ¸µÆÄÀÏ ºÒ·¯¿À±â
-        print('df',str(i),': ',df_before.shape)
-    except:
-        df_before = pd.DataFrame() #¾ÆÁ÷Å©·Ñ¸µµÇÁö ¾ÊÀºÆÄÀÏÀº ºó df
-        print('df',str(i),': ',df_before.shape)
-        
-    df = pd.concat([df,df_before]) #ÇÕÄ¡±â
-        
+#nlp
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+import requests
+from selenium import webdriver
+from tqdm.notebook import tqdm
+import time, urllib
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+keys = Keys()
+import re, os, sys, json
 
-        
-print('df : ', df.shape)
-df.drop_duplicates(subset = None,keep = 'first', inplace = True,ignore_index = True)
-print('Áßº¹Á¦°Ådf : ', df.shape)
+from hanspell import spell_checker
+
+from konlpy.tag import Kkma #ÇüÅÂ¼ÒºĞ¼®
+from konlpy.tag import Okt #ÇüÅÂ¼ÒºĞ¼®
+import soynlp; from soynlp.normalizer import * #Á¤±ÔÈ­
+# from pykospacing import Spacing------------------>½á¾ßÇÔ!
+# spacing = Spacing()------------------------------>½á¾ßÇÔ!
+
+from konlpy.tag import Komoran, Hannanum, Kkma, Okt
+komoran = Komoran(); hannanum = Hannanum(); kkma = Kkma(); okt = Okt();
+
 # %%
-df.to_csv('data/hood_1to20.csv', encoding="UTF-8", index=False) #ÆÄÀÏ·Î ÀúÀå
+def crawlingdataconcat():
+    df = pd.DataFrame()
+    for i in range(1,21,1):
+        try:
+            df_before = pd.read_csv('data/hood_'+str(i)+'page.csv') #Å©·Ñ¸µÆÄÀÏ ºÒ·¯¿À±â
+            print('df',str(i),': ',df_before.shape)
+        except:
+            df_before = pd.DataFrame() #¾ÆÁ÷Å©·Ñ¸µµÇÁö ¾ÊÀºÆÄÀÏÀº ºó df
+            print('df',str(i),': ',df_before.shape)
+            
+        df = pd.concat([df,df_before]) #ÇÕÄ¡±â
+            
+
+            
+    print('df : ', df.shape)
+    df.drop_duplicates(subset = None,keep = 'first', inplace = True,ignore_index = True)
+    print('Áßº¹Á¦°Ådf : ', df.shape)#ÀüÃ¼¿­ÀÌ °°Àº Áßº¹Á¦°Å
+    #¼ºº°, Å°,¸ö¹«°Ô ¸ğµÎ null¾Æ´Ï°í ¼öÄ¡Á¾·ù Àû¾îµµ ÇÏ³ª °ªÀÌ ÀÖ´Â °Íµé filter
+    df = df[~df['gender'].isnull()&~df['height'].isnull()&~df['weight'].isnull()&
+                                      (~df['ÃÑÀå'].isnull()|
+                                       ~df['¾î±ú³Êºñ'].isnull()|~df['°¡½¿´Ü¸é'].isnull()|
+                                       ~df['¼Ò¸Å±æÀÌ'].isnull())]
+    print('ÃÖÁ¾»ç¿ë data:{}'.format(df.shape))
+    print('-'*10)
+    return df
+
+def crawlingdataprocessing(df):
+    #kg,cmÁ¦°Å ¹× ¼öÄ¡Å¸ÀÔÀ¸·Î º¯°æ
+    df["height"]=df["height"].replace('cm','',regex = True)
+    df["weight"]=df["weight"].replace('kg','',regex = True)
+    df= df.astype({'height':'float','weight':'float'})
+    print('dfÀüÃ³¸®¿Ï·á')
+    print('-'*10)
+    return df
+
+def add_reviewcol(df):
+    df = df.drop_duplicates(subset=['content'])#¸®ºäÁßº¹Á¦°Å
+    print('°°Àº³»¿ë¸®ºä Áßº¹Á¦°Å ¿Ï·á')
+    df.reset_index(drop=True, inplace=True)
+
+    df['review'] = str('')
+    #¿Ü±¹¾î ¸®ºä »èÁ¦
+    i = 0; nohangul = []
+    for i in range(df.shape[0]):
+        text = re.sub('[^¤¡-¤Ó°¡-ÆR]', '',df.iloc[i,8])
+        if(text==''):
+            nohangul.append(i)
+    df = df.iloc[[True if i not in nohangul else False for i in range(df.shape[0])],:]
+    df.reset_index(drop=True, inplace=True)
+
+    i=0
+    for i in range(df.shape[0]):
+        text = df.iloc[i,7]
+        text = re.sub(pattern='[^\w\s\n]', repl='', string=text) #Æ¯¼ö¹®ÀÚ Á¦°Å
+        text = re.sub(pattern='[^¤¡-¤¾¤¿-¤Ó°¡-ÆRa-zA-Z]', repl=' ', string=text) #¼ıÀÚ, ±×ÀÌ¿Ü »èÁ¦
+        text = re.sub(pattern='[¤¡-¤¾¤¿-¤Ó]+', repl='', string=text) #´Ü¼ø ¸ğÀ½, ÀÚÀ½ »èÁ¦
+        text = repeat_normalize(text, num_repeats=2) #ºÒÇÊ¿ä¹İº¹¹®ÀÚÁ¤±ÔÈ­
+        #text = spacing(text) #¶ç¾î¾²±â------------------------>½á¾ßÇÔ!
+        df['review'][i] = text
+    print('¸®ºä ÀüÃ³¸® ¿­ Ãß°¡')
+    print('df shape:{}'.format(df.shape))
+    print('-'*10)
+    return df
 # %%
+# µÎ°³ÀÇ »çÀüÀÌ ÇÕÄ¡°í ³ª¼­ ÁøÇà
+# Áßº¹Á¦°Å
+# 'n+2'°³ÀÇ ÃÖÁ¾ ¸®½ºÆ®°¡ »ı¼ºµÊ
+def sizedict_nodup(oneOfRawList):
+    print('Áßº¹Á¦°Å Àü:{}°³'.format(len(oneOfRawList)))
+    oneOfRawList = set(oneOfRawList)
+    print('Áßº¹Á¦°Å ÈÄ:{}°³'.format(len(oneOfRawList)))
+    print('-'*10)
+    return list(oneOfRawList)
+
+
+#ÃÖÁ¾ »çÀÌÁî »çÀü ¿Ï¼º
+def final_sizedict(size_figure_list):
+    all_big = {}
+    all_small = {}
+    for i in size_figure_list:
+        all_big[i] = big
+    
+    for i in size_figure_list:
+        all_small[i] = small
+    
+    return all_big,all_small
+# %%
+df = crawlingdataconcat()
+df = crawlingdataprocessing(df)
+df = add_reviewcol(df)
+#df.to_csv('data/hood_1to20.csv', encoding="UTF-8", index=False) #ÆÄÀÏ·Î ÀúÀå
+# %%
+total_big,total_small           = final_sizedict(total)
+chongjang_big,chongjang_small   = final_sizedict(chongjang)
+shoulder_big,shoulder_small     = final_sizedict(shoulder)
+arm_big,arm_small               = final_sizedict(arm)
+chest_big,chest_small           = final_sizedict(chest)
