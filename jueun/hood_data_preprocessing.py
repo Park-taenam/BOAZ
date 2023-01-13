@@ -48,7 +48,7 @@ from konlpy.tag import Komoran, Hannanum, Kkma, Okt
 komoran = Komoran(); hannanum = Hannanum(); kkma = Kkma(); okt = Okt();
 
 # %%
-def crawlingdataconcat():
+def hood_crawlingdataconcat():
     df = pd.DataFrame()
     for i in range(1,21,1):
         try:
@@ -73,6 +73,9 @@ def crawlingdataconcat():
     print('최종사용 data:{}'.format(df.shape))
     print('-'*10)
     return df
+
+
+# %%
 
 def crawlingdataprocessing(df):
     #kg,cm제거 및 수치타입으로 변경
@@ -112,10 +115,15 @@ def add_reviewcol(df):
     print('-'*10)
     return df
 # %%
-df = crawlingdataconcat()
+df = hood_crawlingdataconcat()
 df = crawlingdataprocessing(df)
+# %%
+# df.to_csv('data/hood_before_add_review.csv',index = False,encoding = 'UTF-8')
+# df = pd.read_csv('data/hood_before_add_review.csv')
+# df.head(2)
 df_before_nlp = add_reviewcol(df)
 df_before_nlp_origin = df_before_nlp.copy()
+
 # %%
 # 두개의 사전이 합치고 나서 진행
 # 중복제거
