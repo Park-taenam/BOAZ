@@ -1,16 +1,20 @@
+# %%
 from flask import Flask,request, url_for, redirect, render_template
 import pickle
 import numpy as np
+import os
 
 app = Flask(__name__)
 
-model=pickle.load(open('model.pkl','rb'))
+# dir_containing_file = r'c:\Users\User\Desktop\BOAZ\Adv\Project_SiZoAH\taenam\web_ml'
+dir_containing_file = r'/home/SizeRecSysTest2/mysite'
+os.chdir(dir_containing_file)
 
+model=pickle.load(open('model.pkl','rb'))
 
 @app.route('/')
 def hello_world():
     return render_template("forest_fire.html")
-
 
 @app.route('/predict',methods=['POST','GET'])
 def predict():
