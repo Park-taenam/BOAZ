@@ -215,6 +215,23 @@ def get_keywords(keywords, df,keyword_column_name):
                 b = re.findall('[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]+' + j ,review[i]) #´Ü¾î + Å°¿öµå
                 bb = re.findall('[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]+\s+' + j ,review[i])#´Ü¾î + ¶ç°í Å°¿öµå
                 #bb = re.findall('[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]+\s+' +' '+ j ,review[i])
+                
+                  #¾Õ¿¡ Áö¸¸/µ¥/°í/º¸´Ù µîÀÌ µé¾îÀÖÀ¸¸é Å°¿öµå¿¡ ´ëÇÑ ¼ö½Ä¾î±¸°¡ ¾Æ´Ô! 
+                if(len(b)!=0):
+                    if(('Áö¸¸' in b[0])|('µ¥' in b[0])|('°í' in b[0])|('º¸´Ù' in b[0])|
+                       ('µµ' in b[0])|('¼­' in b[0])|('¿ä' in b[0])):
+                        b=[]
+                    else:
+                        pass
+                else:
+                    pass
+                if(len(bb)!=0):
+                    if(('Áö¸¸' in bb[0])|('µ¥' in bb[0])|('°í' in bb[0])|('º¸´Ù' in bb[0])|
+                       ('µµ' in bb[0])|('¼­' in bb[0])|('¿ä' in bb[0])):
+                        bb=[]
+                    else:
+                        pass
+                    
                 keywords_search.extend(a)
                 keywords_search.extend(aa)
                 keywords_search.extend(b)
@@ -223,8 +240,11 @@ def get_keywords(keywords, df,keyword_column_name):
                 # print(aa,end='|')
                 # print(b,end='|')
                 # print(bb)
+                
+                
         #print(i,'¹øÂ° ¸®½ºÆ®:',keywords_search)
         #print('-'*10)
+        
         
         if len(keywords_search) != 0:
             keywords_o = ','.join(x for x in keywords_search)
