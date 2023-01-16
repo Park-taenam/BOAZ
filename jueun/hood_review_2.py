@@ -45,47 +45,8 @@ import soynlp; from soynlp.normalizer import * #정규화
 # spacing = Spacing()------------------------------>써야함!
 
 from konlpy.tag import Komoran, Hannanum, Kkma, Okt
-komoran = Komoran(); hannanum = Hannanum(); kkma = Kkma(); okt = Okt();
-
+komoran = Komoran(); hannanum = Hannanum(); kkma = Kkma(); okt = Okt()
 # %%
-def hood_crawlingdataconcat():
-    df = pd.DataFrame()
-    for i in range(1,21,1):
-        try:
-            df_before = pd.read_csv('data/hood_'+str(i)+'page.csv') #크롤링파일 불러오기
-            print('df',str(i),': ',df_before.shape,end = ',')
-        except:
-            df_before = pd.DataFrame() #아직크롤링되지 않은파일은 빈 df
-            print('df',str(i),': ',df_before.shape)
-            
-        df = pd.concat([df,df_before]) #합치기
-            
-
-            
-    print('모두합친df : ', df.shape)
-    df.drop_duplicates(subset = None,keep = 'first', inplace = True,ignore_index = True)
-    print('중복제거df : ', df.shape)#전체열이 같은 중복제거
-    #성별, 키,몸무게 모두 null아니고 수치종류 적어도 하나 값이 있는 것들 filter
-    df = df[~df['gender'].isnull()&~df['height'].isnull()&~df['weight'].isnull()&
-                                      (~df['총장'].isnull()|
-                                       ~df['어깨너비'].isnull()|~df['가슴단면'].isnull()|
-                                       ~df['소매길이'].isnull())]
-    print('최종사용 data:{}'.format(df.shape))
-    print('-'*10)
-    return df
-
-
-# %%
-
-def crawlingdataprocessing(df):
-    #kg,cm제거 및 수치타입으로 변경
-    df["height"]=df["height"].replace('cm','',regex = True)
-    df["weight"]=df["weight"].replace('kg','',regex = True)
-    df= df.astype({'height':'float','weight':'float'})
-    print('df전처리완료')
-    print('-'*10)
-    return df
-
 def add_reviewcol(df):
     df = df.drop_duplicates(subset=['content'])#리뷰중복제거
     print('같은내용리뷰 중복제거 완료')
@@ -115,12 +76,12 @@ def add_reviewcol(df):
     print('-'*10)
     return df
 # %%
-df = hood_crawlingdataconcat()
-df = crawlingdataprocessing(df)
+
 # %%
 # df.to_csv('data/hood_before_add_review.csv',index = False,encoding = 'UTF-8')
 # df = pd.read_csv('data/hood_before_add_review.csv')
 # df.head(2)
+df = pd.read_pickle('data/crawlingdata_preprocess_done.pkl')
 df_before_nlp = add_reviewcol(df)
 df_before_nlp_origin = df_before_nlp.copy()
 
@@ -279,9 +240,9 @@ df_keywords         = pd.concat([df_before_nlp,
 df_keywords =df_keywords.drop(['new_column'],axis = 1)
 df_keywords_origin =df_keywords.copy()
 # %%
-df_keywords.info()
+#df_keywords.info()
 # %%
-#small,big
+#small,big 감지
 def big_small(big,small,df,name_big_small):
     start = time.time()
     review = df[name_big_small+'_keyword']
@@ -335,3 +296,6 @@ shoulder_big_small  = big_small(big,small,df_keywords,name_big_small)
 
 final_df            = df_keywords
 final_df_origin     = final_df.copy()
+# %%
+final_df.to_pickle('data/crawlingdata_preprocess_review_done.pkl')
+# %%
