@@ -1,6 +1,11 @@
+'''
+Reference :
+    - https://pycaret.readthedocs.io/en/stable/api/regression.html
+'''
 # %%
 import numpy as np
 import pandas as pd
+from pycaret.regression import *
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -18,7 +23,7 @@ def preprocessing(df):
                     '총장', '어깨너비', '가슴단면', '소매길이',
                     'chongjang_big', 'chongjang_small',
                     'shoulder_big', 'shoulder_small',
-                    'chest_big', 'chest_small'
+                    'chest_big', 'chest_small',
                     'arm_big', 'arm_small']]
     
     # Make train set
@@ -65,46 +70,44 @@ def preprocessing(df):
 
 
 # %%
-## pycaret
-from pycaret.regression import *
-demo = pycaret.regression.setup(data = data_list[0], target = 'outseam', 
-                                # ignore_features = [],
-                                # normalize = True,
-                                # transformation= True,
-                                # transformation_method = 'yeo-johnson',
-                                # transform_target = True,
-                                # remove_outliers= True,
-                                # remove_multicollinearity = True,
-                                # ignore_low_variance = True,
-                                # combine_rare_levels = True
-                                ) 
-
-best = pycaret.regression.compare_models()
-# plot_model(best)
-# evaluate_model(best)
-
-## Creating models for the best estimators
-random_forest = pycaret.regression.create_model('rf')
-
-# ## Tuning the created models 
-# random_forest = pycaret.tune_model(random_forest)
-
-## Finaliszing model for predictions 
-test_data = data_outseam.iloc[:10, :]
-predictions = pycaret.regression.predict_model(random_forest, data = test_data)
-
-
-
-
-
-
-
-
-# %%
 if __name__=='__main__':
     df = pd.read_pickle('../../data/Modeling_DF_230116.pickle')
     
     hood_chongjang_train_lst, hood_shoulder_train_lst, hood_chest_train_lst, hood_arm_train_lst = preprocessing(df)
 
+    ## pycaret
+    # 총장
+    for i in range(3):
+        print("hood_chongjang_train_lst[{}]".format(i))
+        s = setup(hood_chongjang_train_lst[i], target = '총장')
+        set_config('seed', 2023)
+        best = compare_models()
+        plot_model(best)
+        evaluate_model(best)
     
+    # 어깨
+    for i in range(3):
+        print("hood_shoulder_train_lst[{}]".format(i))
+        s = setup(hood_shoulder_train_lst[i], target = '어깨너비')
+        set_config('seed', 2023)
+        best = compare_models()
+        plot_model(best)
+        evaluate_model(best)
     
+    # 가슴
+    for i in range(3):
+        print("hood_chest_train_lst[{}]".format(i))
+        s = setup(hood_chest_train_lst[i], target = '가슴단면')
+        set_config('seed', 2023)
+        best = compare_models()
+        plot_model(best)
+        evaluate_model(best)
+    
+    # 소매
+    for i in range(3):
+        print("hood_arm_train_lst[{}]".format(i))
+        s = setup(hood_arm_train_lst[i], target = '소매길이')
+        set_config('seed', 2023)
+        best = compare_models()
+        plot_model(best)
+        evaluate_model(best)
