@@ -1,4 +1,6 @@
 data
 *.csv
+*.pkl
+*.pickle
 __pycache__/
 logs.log

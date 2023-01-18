@@ -68,7 +68,6 @@ def preprocessing(df):
     
     return hood_chongjang_train_lst, hood_shoulder_train_lst, hood_chest_train_lst, hood_arm_train_lst
 
-
 # %%
 if __name__=='__main__':
     df = pd.read_pickle('../../data/Modeling_DF_230116.pickle')
