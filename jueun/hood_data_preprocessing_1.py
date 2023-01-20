@@ -77,9 +77,11 @@ def hood_crawlingdataconcat():
 
 def crawlingdataprocessing(df):
     #kg,cm제거 및 수치타입으로 변경
+    df['gender']=df['gender'].apply(lambda x:x.replace("남성","1"))  
+    df['gender']=df['gender'].apply(lambda x:x.replace("여성","0"))  
     df["height"]=df["height"].replace('cm','',regex = True)
     df["weight"]=df["weight"].replace('kg','',regex = True)
-    df= df.astype({'height':'float','weight':'float'})
+    df= df.astype({'gender':'int','height':'float','weight':'float'})
     print('df전처리완료')
     print('-'*10)
     return df
@@ -88,5 +90,6 @@ df = hood_crawlingdataconcat()
 df = crawlingdataprocessing(df)
 df.to_pickle('data/crawlingdata_preprocess_done.pkl')#,encoding="UTF-8", index=False)
 # %%
-#df = pd.read_pickle('data/crawlingdata_preprocess_done.pkl')
+# df = pd.read_pickle('data/crawlingdata_preprocess_done.pkl')
+# df.head()
 # %%
