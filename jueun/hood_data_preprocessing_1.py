@@ -65,11 +65,16 @@ def hood_crawlingdataconcat():
     print('모두합친df : ', df.shape)
     df.drop_duplicates(subset = None,keep = 'first', inplace = True,ignore_index = True)
     print('중복제거df : ', df.shape)#전체열이 같은 중복제거
-    #성별, 키,몸무게 모두 null아니고 수치종류 적어도 하나 값이 있는 것들 filter
+    #성별, 키,몸무게 모두 null아니고 수치종류 모두 null아닌것들로 filter ---->이렇게 수정함!!! 수치종류 하나라도 널이면 수치 잘못들어가기 때문!
     df = df[~df['gender'].isnull()&~df['height'].isnull()&~df['weight'].isnull()&
-                                      (~df['총장'].isnull()|
-                                       ~df['어깨너비'].isnull()|~df['가슴단면'].isnull()|
-                                       ~df['소매길이'].isnull())]
+                                    (~df['총장'].isnull()&
+                                     ~df['어깨너비'].isnull()&
+                                     ~df['가슴단면'].isnull()&
+                                     ~df['소매길이'].isnull())]
+    # df = df[~df['gender'].isnull()&~df['height'].isnull()&~df['weight'].isnull()&
+    #                                   (~df['총장'].isnull()|
+    #                                    ~df['어깨너비'].isnull()|~df['가슴단면'].isnull()|
+    #                                    ~df['소매길이'].isnull())]
     print('최종사용 data:{}'.format(df.shape))
     print('-'*10)
     return df
@@ -77,9 +82,11 @@ def hood_crawlingdataconcat():
 
 def crawlingdataprocessing(df):
     #kg,cm제거 및 수치타입으로 변경
+    df['gender']=df['gender'].apply(lambda x:x.replace("남성","1"))  
+    df['gender']=df['gender'].apply(lambda x:x.replace("여성","0"))  
     df["height"]=df["height"].replace('cm','',regex = True)
     df["weight"]=df["weight"].replace('kg','',regex = True)
-    df= df.astype({'height':'float','weight':'float'})
+    df= df.astype({'gender':'int','height':'float','weight':'float'})
     print('df전처리완료')
     print('-'*10)
     return df
@@ -88,5 +95,6 @@ df = hood_crawlingdataconcat()
 df = crawlingdataprocessing(df)
 df.to_pickle('data/crawlingdata_preprocess_done.pkl')#,encoding="UTF-8", index=False)
 # %%
-#df = pd.read_pickle('data/crawlingdata_preprocess_done.pkl')
+# df = pd.read_pickle('data/crawlingdata_preprocess_done.pkl')
+# df.head()
 # %%

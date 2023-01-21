@@ -78,13 +78,10 @@ def add_reviewcol(df):
 # %%
 
 # %%
-# df.to_csv('data/hood_before_add_review.csv',index = False,encoding = 'UTF-8')
-# df = pd.read_csv('data/hood_before_add_review.csv')
-# df.head(2)
+
 df = pd.read_pickle('data/crawlingdata_preprocess_done.pkl')
 df_before_nlp = add_reviewcol(df)
 df_before_nlp_origin = df_before_nlp.copy()
-
 # %%
 # µÎ°³ÀÇ »çÀüÀÌ ÇÕÄ¡°í ³ª¼­ ÁøÇà
 # Áßº¹Á¦°Å
@@ -166,8 +163,7 @@ def get_keywords(keywords, df,keyword_column_name):
     review = df['review']
     df['new_column'] = str('')
     for i in tqdm(range(len(review))):
-        # if i % 1000 ==0:
-        #     print("{}¹øÂ° ¸®ºä ¿Ï·á(Ãµ ´ÜÀ§) : ".format(i))
+        
         keywords_search = []
         for j in keywords:
             if re.findall(j, review[i]):
@@ -175,7 +171,7 @@ def get_keywords(keywords, df,keyword_column_name):
                 aa = re.findall(j + ' '+'+[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]+\s+[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]+\s+[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]+',review[i])#Å°¿öµå +¶ç°í ´Ü¾î
                 b = re.findall('[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]+' + j ,review[i]) #´Ü¾î + Å°¿öµå
                 bb = re.findall('[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]+\s+' + j ,review[i])#´Ü¾î + ¶ç°í Å°¿öµå
-                #bb = re.findall('[¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]+\s+' +' '+ j ,review[i])
+                
                 
                   #¾Õ¿¡ Áö¸¸/µ¥/°í/º¸´Ù µîÀÌ µé¾îÀÖÀ¸¸é Å°¿öµå¿¡ ´ëÇÑ ¼ö½Ä¾î±¸°¡ ¾Æ´Ô! 
                 if(len(b)!=0):
@@ -197,15 +193,7 @@ def get_keywords(keywords, df,keyword_column_name):
                 keywords_search.extend(aa)
                 keywords_search.extend(b)
                 keywords_search.extend(bb)
-                # print(i,'¹øÂ°',j,a,end='|')
-                # print(aa,end='|')
-                # print(b,end='|')
-                # print(bb)
-                
-                
-        #print(i,'¹øÂ° ¸®½ºÆ®:',keywords_search)
-        #print('-'*10)
-        
+
         
         if len(keywords_search) != 0:
             keywords_o = ','.join(x for x in keywords_search)
@@ -239,8 +227,7 @@ df_keywords         = pd.concat([df_before_nlp,
                                 df_arm],axis = 1)
 df_keywords =df_keywords.drop(['new_column'],axis = 1)
 df_keywords_origin =df_keywords.copy()
-# %%
-#df_keywords.info()
+
 # %%
 #small,big °¨Áö
 def big_small(big,small,df,name_big_small):
@@ -249,8 +236,7 @@ def big_small(big,small,df,name_big_small):
     df[name_big_small + '_big'] = str('')
     df[name_big_small + '_small'] = str('')
     for i in tqdm(range(len(review))):
-        # if i % 1000 ==0:
-        #     print("{}¹øÂ° ¸®ºä ¿Ï·á(Ãµ ´ÜÀ§) : ".format(i))
+      
         big_search = []
         small_search = []
         for j in big:
@@ -276,9 +262,7 @@ def big_small(big,small,df,name_big_small):
             
         else:
             df[name_big_small + '_small'][i] = 0
-        #time.sleep(0.2)
-    
-    #df.rename(columns = {'keyword_column_name':keyword_column_name},inplace=True)
+        
     end = time.time()
     print("{:.5f} sec".format(end-start))
     return df[[name_big_small + '_big',name_big_small + '_small']]
@@ -298,4 +282,11 @@ final_df            = df_keywords
 final_df_origin     = final_df.copy()
 # %%
 final_df.to_pickle('data/crawlingdata_preprocess_review_done.pkl')
+
+# %%
+
+
+#11Ã³¸®ÇÏ°í ÀÌ°Å´Â ´ÙÁ¤ÀÌ ÄÚµåÇÕÃÄ¾ßÇÔ, ±×´ÙÀ½¿¡ ¸ðµ¨ÀúÀåÇÏ´Â ÄÚµå Á¤¸®ÇÏ°í 
+# °¡ÁßÄ¡ ÄÚµåÁ¤¸®ÇÏ°í  ÀúÀåÇØ¼­ °á°ú³»´Â ÄÚµå Á¤¸®!
+
 # %%
