@@ -4,33 +4,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
-import warnings
-warnings.filterwarnings("ignore")
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 
-# 그래프에서 한글 폰트 깨지는 문제에 대한 대처(전역 글꼴 설정)
-import matplotlib.font_manager as fm
-import warnings
-warnings.filterwarnings(action='ignore') 
-
-import matplotlib
-matplotlib.rcParams['font.family'] ='Malgun Gothic'
-matplotlib.rcParams['axes.unicode_minus'] =False
-
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix, mean_squared_error
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.neighbors import KNeighborsClassifier, NeighborhoodComponentsAnalysis
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 #import EDA
-
 from tqdm import tqdm
 import warnings
 warnings.filterwarnings('ignore')
@@ -39,9 +23,6 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import accuracy_score
-
-import joblib
-from sklearn.linear_model import LinearRegression
 # %%
 def forModel_preprocessing(df):
     df = df.astype({'chongjang_big':'int',
@@ -75,23 +56,6 @@ def forModel_preprocessing(df):
     df_arm_big          = df.loc[df['arm_big'] == 1, ['height','weight','gender','소매길이']]
     df_arm_small        = df.loc[df['arm_small'] == 1, ['height','weight','gender','소매길이']]
     df_arm_soso         = df.loc[(df['arm_big'] == 0) & (df['arm_small'] == 0), ['height','weight','gender','소매길이']]
-
-    # Drop Null value
-    df_chongjang_big.dropna(axis = 0,inplace = True)
-    df_chongjang_small.dropna(axis = 0,inplace = True)
-    df_chongjang_soso.dropna(axis = 0,inplace = True)
-
-    df_arm_big.dropna(axis = 0,inplace = True)
-    df_arm_small.dropna(axis = 0,inplace = True)
-    df_arm_soso.dropna(axis = 0,inplace = True)
-
-    df_chest_big.dropna(axis = 0,inplace = True)
-    df_chest_small.dropna(axis = 0,inplace = True)
-    df_chest_soso.dropna(axis = 0,inplace = True)
-
-    df_shoulder_big.dropna(axis = 0,inplace = True)
-    df_shoulder_small.dropna(axis = 0,inplace = True)
-    df_shoulder_soso.dropna(axis = 0,inplace = True)
     
     # train df list
     hood_chongjang_train_lst = [df_chongjang_big, df_chongjang_small, df_chongjang_soso]
@@ -101,7 +65,7 @@ def forModel_preprocessing(df):
     
     return hood_chongjang_train_lst, hood_shoulder_train_lst, hood_chest_train_lst, hood_arm_train_lst
 # %%
-df = pd.read_pickle('data/Modeling_DF_230116.pickle') # ---------->다정이에게 크다작다모두 11인것 처리끝난 파일!!
+df = pd.read_pickle('data/Modeling_DF_230116.pickle'); df = df.dropna(axis=0) # ---------->다정이에게 크다작다모두 11인것 처리끝난 파일!! 3이후의 파일로 고쳐야하고 두번째 모든 null값없애는 것은 1전처리파일에 추가완료
 hood_chongjang_train_lst, hood_shoulder_train_lst, hood_chest_train_lst, hood_arm_train_lst = forModel_preprocessing(df)
 # %%
 # linear regression 모델 저장하는 것 
@@ -129,7 +93,7 @@ def lr_trainModel(lst,sizetype):
             print("MSE of big {}'s Model : {}".format(lst[i].columns[-1], mean_squared_error(yTest, prediction)))
             joblib.dump(lr, 'model/'+sizetype+'_big_lrModel.pkl')
 
-    print(sizetype,"lr_trainModel:done")
+    print("------------------",sizetype,"lr_trainModel:done")
         
 # gradient boosting regressor 모델 저장하는 것 
 # #위치는 model파일에 저장됨
@@ -170,7 +134,7 @@ def gbr_trainModel(lst,sizetype):
             print("MSE of big {}'s Model : {}".format(lst[i].columns[-1], mean_squared_error(yTest, prediction)))
             joblib.dump(model, 'model/'+sizetype+'_big_gbrModel.pkl')
         
-    print(sizetype,"gbr_trainModel:done")
+    print("------------------",sizetype,"gbr_trainModel:done")
     # %%
 sizetype = 'chongjang'
 lr_trainModel(hood_chongjang_train_lst,sizetype)
@@ -196,8 +160,8 @@ def decide_weight(lst,size_type):
     weight = []
     for i in range(len(lst)):
         
-        X = hood_chongjang_train_lst[i].iloc[:, :-1]
-        y = hood_chongjang_train_lst[i].iloc[:, -1]
+        X = lst[i].iloc[:, :-1]
+        y = lst[i].iloc[:, -1]
         xTrain, xTest, yTrain, yTest = train_test_split(X, y, test_size = 0.2, random_state = 42)
         
 
@@ -212,7 +176,6 @@ def decide_weight(lst,size_type):
 
         mse_lst = []
         abc = []
-        
 
         for a in np.arange(0, 1.0, 0.01):
             for b in np.arange(0, 1 - a, 0.01):
@@ -244,31 +207,22 @@ size_type           = 'shoulder'
 shoulder_weight     = decide_weight(hood_shoulder_train_lst,size_type)
 size_type           = 'arm'
 arm_weight          = decide_weight(hood_arm_train_lst,size_type)         
+
 # %%
-# print(chongjang_weight)
-# print(chest_weight)
-# print(shoulder_weight)
-# print(arm_weight)
-# %%
+#최종 4가지 수치 도출
 def finalSizeRecSys():
     userHeight= float(input("키:"))
     userWeight = float(input("몸무게:"))
     userGender = int(input("여자는 0, 남자는 1:"))
     userInfo = [[userHeight,userWeight,userGender]]
+    print('사용자정보(키,몸무게,성별):',userInfo)
     
-    #userTotalPrefer           = input("전체적인 핏의 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:")
-    userChongjangPrefer = input("총장 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:")
-    userShoulderPrefer  = input("어깨너비 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:")
-    userChestPrefer     = input("가슴단면 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:")
-    userArmPrefer       = input("소매길이 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:")
+    #userTotalPrefer    = int(input("전체적인 핏의 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:"))
+    userChongjangPrefer = int(input("총장 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:"))
+    userShoulderPrefer  = int(input("어깨너비 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:"))
+    userChestPrefer     = int(input("가슴단면 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:"))
+    userArmPrefer       = int(input("소매길이 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:"))
    
-    #userTotalPrefer     = int(userTotalPrefer)
-    userChongjangPrefer = int(userChongjangPrefer)
-    userShoulderPrefer  = int(userShoulderPrefer)
-    userChestPrefer     = int(userChestPrefer)
-    userArmPrefer       = int(userArmPrefer)
-    
-    
     chongjang_model_big     = joblib.load('model/chongjang_big_lrModel.pkl')
     chongjang_model_small   = joblib.load('model/chongjang_small_lrModel.pkl')
     chongjang_model_soso    = joblib.load('model/chongjang_soso_gbrModel.pkl')
@@ -330,7 +284,7 @@ def finalSizeRecSys():
         a = chest_weight[1][0]
         b = chest_weight[1][1]
         c = chest_weight[1][2]
-    else:                           # soso 선호할때
+    else:                       # soso 선호할때
         a = chest_weight[2][0]
         b = chest_weight[2][1]
         c = chest_weight[2][2]
@@ -347,7 +301,7 @@ def finalSizeRecSys():
         a = arm_weight[1][0]
         b = arm_weight[1][1]
         c = arm_weight[1][2]
-    else:                           # soso 선호할때
+    else:                     # soso 선호할때
         a = arm_weight[2][0]
         b = arm_weight[2][1]
         c = arm_weight[2][2]
@@ -359,12 +313,69 @@ def finalSizeRecSys():
     
     return [userChonjangPrediction, userShoulderPrediction, userChestPrediction, userArmPrediction]
         
- 
-    
 # %%
 userPrediction_allSize = finalSizeRecSys()
-
 # %%
-userPrediction_allSize[0]
+# 4가지 수치 기반 최종추천사이즈(s,m,l)
+hood_size_df = pd.DataFrame([['S', 65, 48, 58, 64],
+                            ['M', 67.5, 50, 60.5, 65.5],
+                            ['L', 70, 52, 63, 67],
+                            ['XL', 72.5, 54, 65.5, 68.5]], columns=["size", "총장", "어깨너비", "가슴단면", "소매길이"])
+hood_size_df.set_index('size', inplace=True)
+hood_col_dict = {0:"총장", 1:"어깨너비", 2:"가슴단면", 3:"소매길이"}
 
+def find_mse_in_size_df(df, uservalue):
+    size_df_mse_lst = []
+    size = df.index.to_list()
+    for i in range(len(df)):
+        mse = mean_squared_error(np.asarray(df.iloc[i,:]), uservalue)
+        size_df_mse_lst.append(mse)
+    print(size_df_mse_lst)
+    return print('최종추천 사이즈:',size[size_df_mse_lst.index(min(size_df_mse_lst))])
 # %%
+find_mse_in_size_df(hood_size_df, userPrediction_allSize)
+# %%
+userPrediction_allSize
+# %%
+'''
+아래는 태남씌 df 색칠코드-> 잘돌아갑니다
+'''
+# def find_nearest(array, value):
+#     array = np.asarray(array)
+#     idx = (np.abs(array - value)).argmin()
+#     return array[idx]
+
+# def df_coloring_length(series):
+#     highlight = 'background-color : blue;'
+#     default = ''
+    
+#     nearest_value = find_nearest(series, userPrediction_allSize[0])
+    
+#     return [highlight if e == nearest_value else default for e in series]
+
+# def df_coloring_shoulder(series):
+#     highlight = 'background-color : blue;'
+#     default = ''
+    
+#     nearest_value = find_nearest(series, userPrediction_allSize[1])
+    
+#     return [highlight if e == nearest_value else default for e in series]
+
+# def df_coloring_bl(series):
+#     highlight = 'background-color : blue;'
+#     default = ''
+    
+#     nearest_value = find_nearest(series, userPrediction_allSize[2])
+    
+#     return [highlight if e == nearest_value else default for e in series]
+
+# def df_coloring_sleeve(series):
+#     highlight = 'background-color : blue;'
+#     default = ''
+    
+#     nearest_value = find_nearest(series, userPrediction_allSize[3])
+    
+#     return [highlight if e == nearest_value else default for e in series]
+
+
+# hood_size_df.style.apply(df_coloring_length, subset=["총장"], axis=0).apply(df_coloring_shoulder, subset=["어깨너비"], axis=0).apply(df_coloring_bl, subset=["가슴단면"], axis=0).apply(df_coloring_sleeve, subset=["소매길이"], axis=0)
