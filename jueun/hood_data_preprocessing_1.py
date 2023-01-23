@@ -65,16 +65,11 @@ def hood_crawlingdataconcat():
     print('모두합친df : ', df.shape)
     df.drop_duplicates(subset = None,keep = 'first', inplace = True,ignore_index = True)
     print('중복제거df : ', df.shape)#전체열이 같은 중복제거
-    #성별, 키,몸무게 모두 null아니고 수치종류 모두 null아닌것들로 filter ---->이렇게 수정함!!! 수치종류 하나라도 널이면 수치 잘못들어가기 때문!
+    #성별,키,몸무게 모두 null아니고 수치종류 하나라도 null아닌 것 필터
     df = df[~df['gender'].isnull()&~df['height'].isnull()&~df['weight'].isnull()&
-                                    (~df['총장'].isnull()&
-                                     ~df['어깨너비'].isnull()&
-                                     ~df['가슴단면'].isnull()&
-                                     ~df['소매길이'].isnull())]
-    # df = df[~df['gender'].isnull()&~df['height'].isnull()&~df['weight'].isnull()&
-    #                                   (~df['총장'].isnull()|
-    #                                    ~df['어깨너비'].isnull()|~df['가슴단면'].isnull()|
-    #                                    ~df['소매길이'].isnull())]
+                                      (~df['총장'].isnull()|
+                                       ~df['어깨너비'].isnull()|~df['가슴단면'].isnull()|
+                                       ~df['소매길이'].isnull())]
     print('최종사용 data:{}'.format(df.shape))
     print('-'*10)
     return df

@@ -284,9 +284,7 @@ final_df_origin     = final_df.copy()
 final_df.to_pickle('data/crawlingdata_preprocess_review_done.pkl')
 
 # %%
-
-
-#11처리하고 이거는 다정이 코드합쳐야함, 그다음에 모델저장하는 코드 정리하고 
+# 11처리하고 이거는 다정이 코드합쳐야함, 그다음에 모델저장하는 코드 정리하고 
 # 가중치 코드정리하고  저장해서 결과내는 코드 정리!
 
 # %%
