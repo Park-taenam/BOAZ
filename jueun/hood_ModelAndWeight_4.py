@@ -24,6 +24,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import accuracy_score
 # %%
+# forModel_preprocessing(df)::pycaret 돌릴 때, 사용한 코드 그 이후라면 삭제할 함수!
 def forModel_preprocessing(df):
     df = df.astype({'chongjang_big':'int',
                 'chongjang_small':'int',
@@ -57,6 +58,23 @@ def forModel_preprocessing(df):
     df_arm_small        = df.loc[df['arm_small'] == 1, ['height','weight','gender','소매길이']]
     df_arm_soso         = df.loc[(df['arm_big'] == 0) & (df['arm_small'] == 0), ['height','weight','gender','소매길이']]
     
+    # Drop Null value
+    df_chongjang_big.dropna(axis = 0,inplace = True)
+    df_chongjang_small.dropna(axis = 0,inplace = True)
+    df_chongjang_soso.dropna(axis = 0,inplace = True)
+
+    df_arm_big.dropna(axis = 0,inplace = True)
+    df_arm_small.dropna(axis = 0,inplace = True)
+    df_arm_soso.dropna(axis = 0,inplace = True)
+
+    df_chest_big.dropna(axis = 0,inplace = True)
+    df_chest_small.dropna(axis = 0,inplace = True)
+    df_chest_soso.dropna(axis = 0,inplace = True)
+
+    df_shoulder_big.dropna(axis = 0,inplace = True)
+    df_shoulder_small.dropna(axis = 0,inplace = True)
+    df_shoulder_soso.dropna(axis = 0,inplace = True)
+    
     # train df list
     hood_chongjang_train_lst = [df_chongjang_big, df_chongjang_small, df_chongjang_soso]
     hood_shoulder_train_lst = [df_shoulder_big, df_shoulder_small, df_shoulder_soso]
@@ -65,7 +83,7 @@ def forModel_preprocessing(df):
     
     return hood_chongjang_train_lst, hood_shoulder_train_lst, hood_chest_train_lst, hood_arm_train_lst
 # %%
-df = pd.read_pickle('data/Modeling_DF_230116.pickle'); df = df.dropna(axis=0) # ---------->다정이에게 크다작다모두 11인것 처리끝난 파일!! 3이후의 파일로 고쳐야하고 두번째 모든 null값없애는 것은 1전처리파일에 추가완료
+df = pd.read_pickle('data/Modeling_DF_230116.pickle') # ---------->다정이에게 크다작다모두 11인것 처리끝난 파일!! 3이후의 파일로 고쳐야함
 hood_chongjang_train_lst, hood_shoulder_train_lst, hood_chest_train_lst, hood_arm_train_lst = forModel_preprocessing(df)
 # %%
 # linear regression 모델 저장하는 것 
@@ -109,13 +127,13 @@ def gbr_trainModel(lst,sizetype):
         
         gbr = GradientBoostingRegressor()
 
-        parameters = {'learning_rate': [0.01,0.05,0.1,0.15],
+        parameters = {'learning_rate': [0.001,0.01,0.05,0.1],
                   'subsample'    : [0.9, 0.5, 0.2, 0.1],
                   'n_estimators' : [100,200,300,500],
-                  'max_depth'    : [4,6,8,10]
+                  'max_depth'    : [2,4,6,8]
                  }
 
-        grid_gbr = GridSearchCV(estimator=gbr, param_grid = parameters, cv = 2, n_jobs=-1)
+        grid_gbr = GridSearchCV(estimator=gbr, param_grid = parameters, cv = 3, n_jobs=-1)
         grid_gbr.fit(xTrain,yTrain)
         print("Best estimator",grid_gbr.best_estimator_)
         
