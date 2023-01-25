@@ -132,6 +132,7 @@ if __name__=='__main__':
     userShoulderPrefer = int(input("어깨너비 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:"))
     userChestPrefer = int(input("가슴단면 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:"))
     userArmPrefer = int(input("소매길이 선호를 숫자로 입력하세요. [크다(1),작다(-1),보통이다(0)]:"))
+    
     # 사용자 수치 예측
     user_prediction_lst = finalSizeRecSys(userHeight, userWeight, userGender,
                                           userChongjangPrefer, userShoulderPrefer, userChestPrefer, userArmPrefer,
