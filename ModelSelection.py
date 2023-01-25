@@ -140,13 +140,12 @@ def gbr_trainModel(lst, sizetype):
 
         xTrain, xTest, yTrain, yTest = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        gbr = GradientBoostingRegressor()
+        gbr = GradientBoostingRegressor(random_state=42)
 
         parameters = {'learning_rate': [0.001, 0.01, 0.05, 0.1],
                       'subsample': [0.9, 0.5, 0.2, 0.1],
                       'n_estimators': [100, 200, 300, 500],
-                      'max_depth': [2, 4, 6, 8]
-                      }
+                      'max_depth': [2, 4, 6, 8]}
 
         grid_gbr = GridSearchCV(estimator=gbr,
                                 param_grid=parameters,
@@ -161,16 +160,13 @@ def gbr_trainModel(lst, sizetype):
         print('score:{0:.4f}'.format(model.score(xTest, yTest)))
 
         if i % 3 == 1:
-            print("MSE of small {}'s Model : {}".format(
-                lst[i].columns[-1], mean_squared_error(yTest, prediction)))
+            print("MSE of small {}'s Model : {}".format(lst[i].columns[-1], mean_squared_error(yTest, prediction)))
             joblib.dump(model, 'model/'+sizetype+'_small_gbrModel.pkl')
         elif i % 3 == 2:
-            print("MSE of soso {}'s Model : {}".format(
-                lst[i].columns[-1], mean_squared_error(yTest, prediction)))
+            print("MSE of soso {}'s Model : {}".format(lst[i].columns[-1], mean_squared_error(yTest, prediction)))
             joblib.dump(model, 'model/'+sizetype+'_soso_gbrModel.pkl')
         elif i % 3 == 0:
-            print("MSE of big {}'s Model : {}".format(
-                lst[i].columns[-1], mean_squared_error(yTest, prediction)))
+            print("MSE of big {}'s Model : {}".format(lst[i].columns[-1], mean_squared_error(yTest, prediction)))
             joblib.dump(model, 'model/'+sizetype+'_big_gbrModel.pkl')
 
     print("------------------", sizetype, "gbr_trainModel:done")
@@ -222,31 +218,22 @@ def decide_weight(lst,size_type):
 if __name__=='__main__':
     df = pd.read_pickle('data_review_preprocessing_done.pkl')
 
-    hood_chongjang_train_lst, hood_shoulder_train_lst, hood_chest_train_lst, hood_arm_train_lst = preprocessing(
-        df)
+    hood_chongjang_train_lst, hood_shoulder_train_lst, hood_chest_train_lst, hood_arm_train_lst = preprocessing(df)
 
     # Pycaret
-    pycaret(df, hood_chongjang_train_lst, hood_shoulder_train_lst, hood_chest_train_lst, hood_arm_train_lst)
+    pycaret(hood_chongjang_train_lst, hood_shoulder_train_lst, hood_chest_train_lst, hood_arm_train_lst)
 
     ## Train model
     # Linear Regressor
-    sizetype = 'chongjang'
-    lr_trainModel(hood_chongjang_train_lst, sizetype)
-    sizetype = 'shoulder'
-    lr_trainModel(hood_shoulder_train_lst, sizetype)
-    sizetype = 'chest'
-    lr_trainModel(hood_chest_train_lst, sizetype)
-    sizetype = 'arm'
-    lr_trainModel(hood_arm_train_lst, sizetype)
+    lr_trainModel(hood_chongjang_train_lst, 'chongjang')
+    lr_trainModel(hood_shoulder_train_lst, 'shoulder')
+    lr_trainModel(hood_chest_train_lst, 'chest')
+    lr_trainModel(hood_arm_train_lst, 'arm')
     # Gradient Boosting Regressor
-    sizetype = 'chongjang'
-    gbr_trainModel(hood_chongjang_train_lst, sizetype)
-    sizetype = 'shoulder'
-    gbr_trainModel(hood_shoulder_train_lst, sizetype)
-    sizetype = 'chest'
-    gbr_trainModel(hood_chest_train_lst, sizetype)
-    sizetype = 'arm'
-    gbr_trainModel(hood_arm_train_lst, sizetype)
+    gbr_trainModel(hood_chongjang_train_lst, 'chongjang')
+    gbr_trainModel(hood_shoulder_train_lst, 'shoulder')
+    gbr_trainModel(hood_chest_train_lst, 'chest')
+    gbr_trainModel(hood_arm_train_lst, 'arm')
 
     # Decide Weight
     chongjang_weight = decide_weight(hood_chongjang_train_lst, 'chongjang')
