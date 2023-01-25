@@ -48,7 +48,7 @@ def finalSizeRecSys(userHeight,userWeight,userGender,
     userChonjangPrediction = (chongjang_model_big.predict(userInfo) * a 
                               + chongjang_model_small.predict(userInfo) * b 
                               + chongjang_model_soso.predict(userInfo) * c)
-    print('총장 예측값:{}'.format(userChonjangPrediction))
+    print('총장 예측값:{}'.format(str(userChonjangPrediction)))
     
     
     if userShoulderPrefer == 1:    # big선호할 때
@@ -66,7 +66,7 @@ def finalSizeRecSys(userHeight,userWeight,userGender,
     userShoulderPrediction = (shoulder_model_big.predict(userInfo) * a 
                               + shoulder_model_small.predict(userInfo) * b 
                               + shoulder_model_soso.predict(userInfo) * c)
-    print('어깨너비 예측값:{}'.format(userShoulderPrediction))
+    print('어깨너비 예측값:{}'.format(str(userShoulderPrediction)))
         
     if userChestPrefer == 1:    # big선호할 때
         a = chest_weight[0][0]
@@ -83,7 +83,7 @@ def finalSizeRecSys(userHeight,userWeight,userGender,
     userChestPrediction = (chest_model_big.predict(userInfo) * a 
                               + chest_model_small.predict(userInfo) * b 
                               + chest_model_soso.predict(userInfo) * c)
-    print('가슴단면 예측값:{}'.format(userChestPrediction))
+    print('가슴단면 예측값:{}'.format(str(userChestPrediction)))
     
     if userArmPrefer == 1:    # big선호할 때
         a = arm_weight[0][0]
@@ -100,27 +100,27 @@ def finalSizeRecSys(userHeight,userWeight,userGender,
     userArmPrediction = (arm_model_big.predict(userInfo) * a 
                               + arm_model_small.predict(userInfo) * b 
                               + arm_model_soso.predict(userInfo) * c)
-    print('소매길이 예측값:{}'.format(userArmPrediction))
+    print('소매길이 예측값:{}'.format(str(userArmPrediction)))
     print('done')
     
     user_prediction_lst = [userChonjangPrediction, userShoulderPrediction, userChestPrediction, userArmPrediction]
     
     return user_prediction_lst
 
-def find_mse_in_size_df(df, uservalue):
+def find_mse_in_size_df(size_df, user_prediction_lst):
     size_df_mse_lst = []
-    size = df.index.to_list()
-    for i in range(len(df)):
-        mse = mean_squared_error(np.asarray(df.iloc[i,:]), uservalue)
+    size = size_df.index.to_list()
+    for i in range(size_df.shape[0]):
+        mse = mean_squared_error(np.asarray(size_df.iloc[i,:]), user_prediction_lst)
         size_df_mse_lst.append(mse)
-    
+
     return size[np.argmin(size_df_mse_lst)]
 
 # %%
 if __name__=='__main__':
 
     # Road Weight
-    with open('weight.pkl', 'rb') as f:
+    with open('./data/weight.pkl', 'rb') as f:
         chongjang_weight, chest_weight, shoulder_weight, arm_weight = pickle.load(f)
 
     ## Recsys
@@ -138,11 +138,11 @@ if __name__=='__main__':
                                           chongjang_weight, shoulder_weight, chest_weight, arm_weight)
     # 최종 사이즈 추천
     hood_size_df = pd.DataFrame([['S', 65, 48, 58, 64],
-                            ['M', 67.5, 50, 60.5, 65.5],
-                            ['L', 70, 52, 63, 67],
-                            ['XL', 72.5, 54, 65.5, 68.5]], columns=["size", "총장", "어깨너비", "가슴단면", "소매길이"])
+                                 ['M', 67.5, 50, 60.5, 65.5],
+                                 ['L', 70, 52, 63, 67],
+                                 ['XL', 72.5, 54, 65.5, 68.5]], columns=["size", "총장", "어깨너비", "가슴단면", "소매길이"])
     hood_size_df.set_index('size', inplace=True)
-    hood_col_dict = {0:"총장", 1:"어깨너비", 2:"가슴단면", 3:"소매길이"}
+    # hood_col_dict = {0:"총장", 1:"어깨너비", 2:"가슴단면", 3:"소매길이"}
     
     size_rec = find_mse_in_size_df(hood_size_df, user_prediction_lst)
     

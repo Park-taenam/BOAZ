@@ -12,7 +12,7 @@ warnings.filterwarnings('ignore')
 def RoadConcat():
     df = pd.DataFrame()
     for page in range(1,21,1):
-        df_before = pd.read_csv('./hood_data/hood_{}page.csv'.format(page))
+        df_before = pd.read_csv('./data/hood_{}page.csv'.format(page))
         print("hood_df_{}'s shape : {}".format(page, df_before.shape))
             
         df = pd.concat([df,df_before])
@@ -87,4 +87,4 @@ if __name__=="__main__":
     data = Preprocessing(data)
     data = ReviewPreprocessing(data)
 
-    data.to_pickle('data_preprocessing_done.pkl')
+    data.to_pickle('./data/data_preprocessing_done.pkl')
