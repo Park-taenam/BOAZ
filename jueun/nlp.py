@@ -5,7 +5,8 @@ from sklearn.model_selection import KFold
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import sentiwordnet as swn
 from matplotlib import pyplot as plt
-# ¶óÀÌºê·¯¸® ·Îµå 
+
+# ï¿½ï¿½ï¿½Ìºê·¯ï¿½ï¿½ ï¿½Îµï¿½ 
 from sklearn.feature_extraction.text import HashingVectorizer
 from konlpy.tag import *
 from konlpy.utils import pprint
@@ -40,18 +41,18 @@ from nltk.corpus import stopwords
 
 ############################################################################
 
-# ÇÑ±¹¾î nlp
-from konlpy.tag import *   # ¸ðµç ÇüÅÂ¼ÒºÐ¼®±â import ÇÏ±â
+# ï¿½Ñ±ï¿½ï¿½ï¿½ nlp
+from konlpy.tag import *   # ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¼ÒºÐ¼ï¿½ï¿½ï¿½ import ï¿½Ï±ï¿½
 okt = Okt()
 
-# ¿µ¾î nlp °ü·Ã
+# ï¿½ï¿½ï¿½ï¿½ nlp ï¿½ï¿½ï¿½ï¿½
 from nltk.tokenize import word_tokenize
 
-# ½Ã°¢È­ °ü·Ã
+# ï¿½Ã°ï¿½È­ ï¿½ï¿½ï¿½ï¿½
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 from collections import Counter
 from PIL import Image
 
-# ±âÅ¸
-from tqdm import tqdm_notebook, tqdm   # for¹® ÁøÇà»óÈ² ´«À¸·Î È®ÀÎ (loading bar)
+# ï¿½ï¿½Å¸
+from tqdm import tqdm_notebook, tqdm   # forï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½È² ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ (loading bar)
 import datetime

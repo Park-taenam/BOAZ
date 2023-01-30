@@ -10,7 +10,6 @@ import mlxtend
 
 import warnings
 warnings.filterwarnings('ignore')
-
 # %%
 def preprocessing(data):
     # height, weight 숫자로 변경

@@ -14,7 +14,6 @@ Error :
         https://stackoverflow.com/questions/69515086/error-attributeerror-collections-has-no-attribute-callable-using-beautifu
 
 '''
-
 # %%
 ## import
 import os

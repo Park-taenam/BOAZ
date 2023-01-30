@@ -17,7 +17,6 @@ collections.Callable = collections.abc.Callable
 
 import warnings
 warnings.filterwarnings("ignore")
-
 # %%
 def get_review_content(driver, review_each_num):
     html = driver.page_source

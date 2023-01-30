@@ -12,6 +12,7 @@ from sklearn.model_selection import GridSearchCV
 
 import warnings
 warnings.filterwarnings("ignore")
+
 # %%
 def preprocessing(df):
     df = df.astype({'chongjang_big':'int',

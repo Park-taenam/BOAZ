@@ -7,7 +7,6 @@ from sklearn.metrics import mean_squared_error
 
 import warnings
 warnings.filterwarnings("ignore")
-
 # %%
 def finalSizeRecSys(userHeight,userWeight,userGender,
                     userChongjangPrefer, userShoulderPrefer, userChestPrefer, userArmPrefer,

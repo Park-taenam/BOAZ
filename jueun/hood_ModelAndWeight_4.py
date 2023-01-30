@@ -23,8 +23,9 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import accuracy_score
+
 # %%
-# forModel_preprocessing(df)::pycaret µ¹¸± ¶§, »ç¿ëÇÑ ÄÚµå ±× ÀÌÈÄ¶ó¸é »èÁ¦ÇÒ ÇÔ¼ö!
+# forModel_preprocessing(df)::pycaret ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½!
 def forModel_preprocessing(df):
     df = df.astype({'chongjang_big':'int',
                 'chongjang_small':'int',
@@ -35,28 +36,28 @@ def forModel_preprocessing(df):
                 'arm_big':'int',
                 'arm_small':'int'})
     df = df.loc[:, ['gender', 'height', 'weight', 'size', 'content',
-                    'ÃÑÀå', '¾î±ú³Êºñ', '°¡½¿´Ü¸é', '¼Ò¸Å±æÀÌ',
+                    'ï¿½ï¿½ï¿½ï¿½', 'ï¿½ï¿½ï¿½ï¿½Êºï¿½', 'ï¿½ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½', 'ï¿½Ò¸Å±ï¿½ï¿½ï¿½',
                     'chongjang_big', 'chongjang_small',
                     'shoulder_big', 'shoulder_small',
                     'chest_big', 'chest_small',
                     'arm_big', 'arm_small']]
     
     # Make train set
-    df_chongjang_big    = df.loc[df['chongjang_big'] == 1, ['height','weight','gender', 'ÃÑÀå']]
-    df_chongjang_small  = df.loc[df['chongjang_small'] == 1, ['height','weight','gender', 'ÃÑÀå']]
-    df_chongjang_soso   = df.loc[(df['chongjang_big'] == 0) & (df['chongjang_small'] == 0), ['height','weight','gender', 'ÃÑÀå']]
+    df_chongjang_big    = df.loc[df['chongjang_big'] == 1, ['height','weight','gender', 'ï¿½ï¿½ï¿½ï¿½']]
+    df_chongjang_small  = df.loc[df['chongjang_small'] == 1, ['height','weight','gender', 'ï¿½ï¿½ï¿½ï¿½']]
+    df_chongjang_soso   = df.loc[(df['chongjang_big'] == 0) & (df['chongjang_small'] == 0), ['height','weight','gender', 'ï¿½ï¿½ï¿½ï¿½']]
 
-    df_shoulder_big     = df.loc[df['shoulder_big'] == 1, ['height','weight','gender', '¾î±ú³Êºñ']]
-    df_shoulder_small   = df.loc[df['shoulder_small'] == 1, ['height','weight','gender', '¾î±ú³Êºñ']]
-    df_shoulder_soso    = df.loc[(df['shoulder_big'] == 0) & (df['shoulder_small'] == 0), ['height','weight','gender', '¾î±ú³Êºñ']]
+    df_shoulder_big     = df.loc[df['shoulder_big'] == 1, ['height','weight','gender', 'ï¿½ï¿½ï¿½ï¿½Êºï¿½']]
+    df_shoulder_small   = df.loc[df['shoulder_small'] == 1, ['height','weight','gender', 'ï¿½ï¿½ï¿½ï¿½Êºï¿½']]
+    df_shoulder_soso    = df.loc[(df['shoulder_big'] == 0) & (df['shoulder_small'] == 0), ['height','weight','gender', 'ï¿½ï¿½ï¿½ï¿½Êºï¿½']]
 
-    df_chest_big        = df.loc[df['chest_big'] == 1, ['height','weight','gender', '°¡½¿´Ü¸é']]
-    df_chest_small      = df.loc[df['chest_small'] == 1, ['height','weight','gender', '°¡½¿´Ü¸é']]
-    df_chest_soso       = df.loc[(df['chest_big'] == 0 )& (df['chest_small'] == 0), ['height','weight','gender', '°¡½¿´Ü¸é']]
+    df_chest_big        = df.loc[df['chest_big'] == 1, ['height','weight','gender', 'ï¿½ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½']]
+    df_chest_small      = df.loc[df['chest_small'] == 1, ['height','weight','gender', 'ï¿½ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½']]
+    df_chest_soso       = df.loc[(df['chest_big'] == 0 )& (df['chest_small'] == 0), ['height','weight','gender', 'ï¿½ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½']]
 
-    df_arm_big          = df.loc[df['arm_big'] == 1, ['height','weight','gender','¼Ò¸Å±æÀÌ']]
-    df_arm_small        = df.loc[df['arm_small'] == 1, ['height','weight','gender','¼Ò¸Å±æÀÌ']]
-    df_arm_soso         = df.loc[(df['arm_big'] == 0) & (df['arm_small'] == 0), ['height','weight','gender','¼Ò¸Å±æÀÌ']]
+    df_arm_big          = df.loc[df['arm_big'] == 1, ['height','weight','gender','ï¿½Ò¸Å±ï¿½ï¿½ï¿½']]
+    df_arm_small        = df.loc[df['arm_small'] == 1, ['height','weight','gender','ï¿½Ò¸Å±ï¿½ï¿½ï¿½']]
+    df_arm_soso         = df.loc[(df['arm_big'] == 0) & (df['arm_small'] == 0), ['height','weight','gender','ï¿½Ò¸Å±ï¿½ï¿½ï¿½']]
     
     # Drop Null value
     df_chongjang_big.dropna(axis = 0,inplace = True)
@@ -83,11 +84,11 @@ def forModel_preprocessing(df):
     
     return hood_chongjang_train_lst, hood_shoulder_train_lst, hood_chest_train_lst, hood_arm_train_lst
 # %%
-df = pd.read_pickle('data/Modeling_DF_230116.pickle') # ---------->´ÙÁ¤ÀÌ¿¡°Ô Å©´ÙÀÛ´Ù¸ðµÎ 11ÀÎ°Í Ã³¸®³¡³­ ÆÄÀÏ!! 3ÀÌÈÄÀÇ ÆÄÀÏ·Î °íÃÄ¾ßÇÔ
+df = pd.read_pickle('data/Modeling_DF_230116.pickle') # ---------->ï¿½ï¿½ï¿½ï¿½ï¿½Ì¿ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ï¿½Û´Ù¸ï¿½ï¿½ 11ï¿½Î°ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!! 3ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï·ï¿½ ï¿½ï¿½ï¿½Ä¾ï¿½ï¿½ï¿½
 hood_chongjang_train_lst, hood_shoulder_train_lst, hood_chest_train_lst, hood_arm_train_lst = forModel_preprocessing(df)
 # %%
-# linear regression ¸ðµ¨ ÀúÀåÇÏ´Â °Í 
-# #À§Ä¡´Â modelÆÄÀÏ¿¡ ÀúÀåµÊ
+# linear regression ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ 
+# #ï¿½ï¿½Ä¡ï¿½ï¿½ modelï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 def lr_trainModel(lst,sizetype):
     for i in range(len(lst)):
         
@@ -113,8 +114,8 @@ def lr_trainModel(lst,sizetype):
 
     print("------------------",sizetype,"lr_trainModel:done")
         
-# gradient boosting regressor ¸ðµ¨ ÀúÀåÇÏ´Â °Í 
-# #À§Ä¡´Â modelÆÄÀÏ¿¡ ÀúÀåµÊ
+# gradient boosting regressor ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ 
+# #ï¿½ï¿½Ä¡ï¿½ï¿½ modelï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 def gbr_trainModel(lst,sizetype):
     for i in range(len(lst)):
         
@@ -172,7 +173,7 @@ gbr_trainModel(hood_chest_train_lst,sizetype)
 sizetype = 'arm'
 gbr_trainModel(hood_arm_train_lst,sizetype)
 # %%
-# ÀúÀåµÈ ¸ðµ¨ ºÒ·¯¿Í¼­ °¡ÁßÄ¡ ±¸ÇÏ±â!! 
+# ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½Í¼ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½Ï±ï¿½!! 
 def decide_weight(lst,size_type):
     print('-------'+size_type+'-------')
     weight = []
@@ -204,21 +205,21 @@ def decide_weight(lst,size_type):
                 mse_lst.append(mean_squared_error(yTest, final_prediction))
                 
         if i % 3 == 0:
-            print("big ÀÏ ¶§! ÃÖ¼Ò MSE:{},°¡ÁßÄ¡(big,small,soso):{}".format(mse_lst[np.argmin(mse_lst)],[round(x,2) for x in abc[np.argmin(mse_lst)]]))
+            print("big ï¿½ï¿½ ï¿½ï¿½! ï¿½Ö¼ï¿½ MSE:{},ï¿½ï¿½ï¿½ï¿½Ä¡(big,small,soso):{}".format(mse_lst[np.argmin(mse_lst)],[round(x,2) for x in abc[np.argmin(mse_lst)]]))
             weight.append(abc[np.argmin(mse_lst)])
             
         elif i % 3 == 1:
-            print("small ÀÏ ¶§! ÃÖ¼Ò MSE:{},°¡ÁßÄ¡(big,small,soso):{}".format(mse_lst[np.argmin(mse_lst)],[round(x,2) for x in abc[np.argmin(mse_lst)]]))
+            print("small ï¿½ï¿½ ï¿½ï¿½! ï¿½Ö¼ï¿½ MSE:{},ï¿½ï¿½ï¿½ï¿½Ä¡(big,small,soso):{}".format(mse_lst[np.argmin(mse_lst)],[round(x,2) for x in abc[np.argmin(mse_lst)]]))
             weight.append(abc[np.argmin(mse_lst)])
             
         elif i % 3 == 2:
-            print("soso ÀÏ ¶§! ÃÖ¼Ò MSE:{},°¡ÁßÄ¡(big,small,soso):{}".format(mse_lst[np.argmin(mse_lst)],[round(x,2) for x in abc[np.argmin(mse_lst)]]))
+            print("soso ï¿½ï¿½ ï¿½ï¿½! ï¿½Ö¼ï¿½ MSE:{},ï¿½ï¿½ï¿½ï¿½Ä¡(big,small,soso):{}".format(mse_lst[np.argmin(mse_lst)],[round(x,2) for x in abc[np.argmin(mse_lst)]]))
             weight.append(abc[np.argmin(mse_lst)])
     
     return weight
 # %%             
 size_type           = 'chongjang'
-chongjang_weight    = decide_weight(hood_chongjang_train_lst,size_type) # 'Å©´Ù, ÀÛ´Ù, Áß°£ÀÌ´Ù' °¡ÁßÄ¡ ¼øÀ¸·Î µé¾î°¡ ÀÖÀ½
+chongjang_weight    = decide_weight(hood_chongjang_train_lst,size_type) # 'Å©ï¿½ï¿½, ï¿½Û´ï¿½, ï¿½ß°ï¿½ï¿½Ì´ï¿½' ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½î°¡ ï¿½ï¿½ï¿½ï¿½
 size_type           = 'chest'
 chest_weight        = decide_weight(hood_chest_train_lst,size_type)
 size_type           = 'shoulder'
@@ -227,19 +228,19 @@ size_type           = 'arm'
 arm_weight          = decide_weight(hood_arm_train_lst,size_type)         
 
 # %%
-#ÃÖÁ¾ 4°¡Áö ¼öÄ¡ µµÃâ
+#ï¿½ï¿½ï¿½ï¿½ 4ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
 def finalSizeRecSys():
     userHeight= float(input("Å°:"))
-    userWeight = float(input("¸ö¹«°Ô:"))
-    userGender = int(input("¿©ÀÚ´Â 0, ³²ÀÚ´Â 1:"))
+    userWeight = float(input("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:"))
+    userGender = int(input("ï¿½ï¿½ï¿½Ú´ï¿½ 0, ï¿½ï¿½ï¿½Ú´ï¿½ 1:"))
     userInfo = [[userHeight,userWeight,userGender]]
-    print('»ç¿ëÀÚÁ¤º¸(Å°,¸ö¹«°Ô,¼ºº°):',userInfo)
+    print('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(Å°,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½):',userInfo)
     
-    #userTotalPrefer    = int(input("ÀüÃ¼ÀûÀÎ ÇÍÀÇ ¼±È£¸¦ ¼ýÀÚ·Î ÀÔ·ÂÇÏ¼¼¿ä. [Å©´Ù(1),ÀÛ´Ù(-1),º¸ÅëÀÌ´Ù(0)]:"))
-    userChongjangPrefer = int(input("ÃÑÀå ¼±È£¸¦ ¼ýÀÚ·Î ÀÔ·ÂÇÏ¼¼¿ä. [Å©´Ù(1),ÀÛ´Ù(-1),º¸ÅëÀÌ´Ù(0)]:"))
-    userShoulderPrefer  = int(input("¾î±ú³Êºñ ¼±È£¸¦ ¼ýÀÚ·Î ÀÔ·ÂÇÏ¼¼¿ä. [Å©´Ù(1),ÀÛ´Ù(-1),º¸ÅëÀÌ´Ù(0)]:"))
-    userChestPrefer     = int(input("°¡½¿´Ü¸é ¼±È£¸¦ ¼ýÀÚ·Î ÀÔ·ÂÇÏ¼¼¿ä. [Å©´Ù(1),ÀÛ´Ù(-1),º¸ÅëÀÌ´Ù(0)]:"))
-    userArmPrefer       = int(input("¼Ò¸Å±æÀÌ ¼±È£¸¦ ¼ýÀÚ·Î ÀÔ·ÂÇÏ¼¼¿ä. [Å©´Ù(1),ÀÛ´Ù(-1),º¸ÅëÀÌ´Ù(0)]:"))
+    #userTotalPrefer    = int(input("ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½Ú·ï¿½ ï¿½Ô·ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½. [Å©ï¿½ï¿½(1),ï¿½Û´ï¿½(-1),ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½(0)]:"))
+    userChongjangPrefer = int(input("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½Ú·ï¿½ ï¿½Ô·ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½. [Å©ï¿½ï¿½(1),ï¿½Û´ï¿½(-1),ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½(0)]:"))
+    userShoulderPrefer  = int(input("ï¿½ï¿½ï¿½ï¿½Êºï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½Ú·ï¿½ ï¿½Ô·ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½. [Å©ï¿½ï¿½(1),ï¿½Û´ï¿½(-1),ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½(0)]:"))
+    userChestPrefer     = int(input("ï¿½ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½Ú·ï¿½ ï¿½Ô·ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½. [Å©ï¿½ï¿½(1),ï¿½Û´ï¿½(-1),ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½(0)]:"))
+    userArmPrefer       = int(input("ï¿½Ò¸Å±ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½Ú·ï¿½ ï¿½Ô·ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½. [Å©ï¿½ï¿½(1),ï¿½Û´ï¿½(-1),ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½(0)]:"))
    
     chongjang_model_big     = joblib.load('model/chongjang_big_lrModel.pkl')
     chongjang_model_small   = joblib.load('model/chongjang_small_lrModel.pkl')
@@ -258,75 +259,75 @@ def finalSizeRecSys():
     arm_model_soso          = joblib.load('model/arm_soso_gbrModel.pkl')
     
     
-    #ÃÑÀå¿¹Ãø
-    if userChongjangPrefer == 1:    # big¼±È£ÇÒ ¶§
+    #ï¿½ï¿½ï¿½å¿¹ï¿½ï¿½
+    if userChongjangPrefer == 1:    # bigï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½
         a = chongjang_weight[0][0]
         b = chongjang_weight[0][1]
         c = chongjang_weight[0][2]
-    elif userChongjangPrefer == -1: # small ¼±È£ÇÒ ¶§
+    elif userChongjangPrefer == -1: # small ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½
         a = chongjang_weight[1][0]
         b = chongjang_weight[1][1]
         c = chongjang_weight[1][2]
-    else:                           # soso ¼±È£ÇÒ¶§
+    else:                           # soso ï¿½ï¿½È£ï¿½Ò¶ï¿½
         a = chongjang_weight[2][0]
         b = chongjang_weight[2][1]
         c = chongjang_weight[2][2]
     userChonjangPrediction = (chongjang_model_big.predict(userInfo) * a 
                               + chongjang_model_small.predict(userInfo) * b 
                               + chongjang_model_soso.predict(userInfo) * c)
-    print('ÃÑÀå ¿¹Ãø°ª:{}'.format(userChonjangPrediction))
+    print('ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:{}'.format(userChonjangPrediction))
     
     
-    if userShoulderPrefer == 1:    # big¼±È£ÇÒ ¶§
+    if userShoulderPrefer == 1:    # bigï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½
         a = shoulder_weight[0][0]
         b = shoulder_weight[0][1]
         c = shoulder_weight[0][2]
-    elif userShoulderPrefer == -1: # small ¼±È£ÇÒ ¶§
+    elif userShoulderPrefer == -1: # small ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½
         a = shoulder_weight[1][0]
         b = shoulder_weight[1][1]
         c = shoulder_weight[1][2]
-    else:                           # soso ¼±È£ÇÒ¶§
+    else:                           # soso ï¿½ï¿½È£ï¿½Ò¶ï¿½
         a = shoulder_weight[2][0]
         b = shoulder_weight[2][1]
         c = shoulder_weight[2][2]
     userShoulderPrediction = (shoulder_model_big.predict(userInfo) * a 
                               + shoulder_model_small.predict(userInfo) * b 
                               + shoulder_model_soso.predict(userInfo) * c)
-    print('¾î±ú³Êºñ ¿¹Ãø°ª:{}'.format(userShoulderPrediction))
+    print('ï¿½ï¿½ï¿½ï¿½Êºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:{}'.format(userShoulderPrediction))
         
-    if userChestPrefer == 1:    # big¼±È£ÇÒ ¶§
+    if userChestPrefer == 1:    # bigï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½
         a = chest_weight[0][0]
         b = chest_weight[0][1]
         c = chest_weight[0][2]
-    elif userChestPrefer == -1: # small ¼±È£ÇÒ ¶§
+    elif userChestPrefer == -1: # small ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½
         a = chest_weight[1][0]
         b = chest_weight[1][1]
         c = chest_weight[1][2]
-    else:                       # soso ¼±È£ÇÒ¶§
+    else:                       # soso ï¿½ï¿½È£ï¿½Ò¶ï¿½
         a = chest_weight[2][0]
         b = chest_weight[2][1]
         c = chest_weight[2][2]
     userChestPrediction = (chest_model_big.predict(userInfo) * a 
                               + chest_model_small.predict(userInfo) * b 
                               + chest_model_soso.predict(userInfo) * c)
-    print('°¡½¿´Ü¸é ¿¹Ãø°ª:{}'.format(userChestPrediction))
+    print('ï¿½ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:{}'.format(userChestPrediction))
     
-    if userArmPrefer == 1:    # big¼±È£ÇÒ ¶§
+    if userArmPrefer == 1:    # bigï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½
         a = arm_weight[0][0]
         b = arm_weight[0][1]
         c = arm_weight[0][2]
-    elif userArmPrefer == -1: # small ¼±È£ÇÒ ¶§
+    elif userArmPrefer == -1: # small ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½
         a = arm_weight[1][0]
         b = arm_weight[1][1]
         c = arm_weight[1][2]
-    else:                     # soso ¼±È£ÇÒ¶§
+    else:                     # soso ï¿½ï¿½È£ï¿½Ò¶ï¿½
         a = arm_weight[2][0]
         b = arm_weight[2][1]
         c = arm_weight[2][2]
     userArmPrediction = (arm_model_big.predict(userInfo) * a 
                               + arm_model_small.predict(userInfo) * b 
                               + arm_model_soso.predict(userInfo) * c)
-    print('¼Ò¸Å±æÀÌ ¿¹Ãø°ª:{}'.format(userArmPrediction))
+    print('ï¿½Ò¸Å±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:{}'.format(userArmPrediction))
     print('done')
     
     return [userChonjangPrediction, userShoulderPrediction, userChestPrediction, userArmPrediction]
@@ -334,13 +335,13 @@ def finalSizeRecSys():
 # %%
 userPrediction_allSize = finalSizeRecSys()
 # %%
-# 4°¡Áö ¼öÄ¡ ±â¹Ý ÃÖÁ¾ÃßÃµ»çÀÌÁî(s,m,l)
+# 4ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(s,m,l)
 hood_size_df = pd.DataFrame([['S', 65, 48, 58, 64],
                             ['M', 67.5, 50, 60.5, 65.5],
                             ['L', 70, 52, 63, 67],
-                            ['XL', 72.5, 54, 65.5, 68.5]], columns=["size", "ÃÑÀå", "¾î±ú³Êºñ", "°¡½¿´Ü¸é", "¼Ò¸Å±æÀÌ"])
+                            ['XL', 72.5, 54, 65.5, 68.5]], columns=["size", "ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½Êºï¿½", "ï¿½ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½", "ï¿½Ò¸Å±ï¿½ï¿½ï¿½"])
 hood_size_df.set_index('size', inplace=True)
-hood_col_dict = {0:"ÃÑÀå", 1:"¾î±ú³Êºñ", 2:"°¡½¿´Ü¸é", 3:"¼Ò¸Å±æÀÌ"}
+hood_col_dict = {0:"ï¿½ï¿½ï¿½ï¿½", 1:"ï¿½ï¿½ï¿½ï¿½Êºï¿½", 2:"ï¿½ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½", 3:"ï¿½Ò¸Å±ï¿½ï¿½ï¿½"}
 
 def find_mse_in_size_df(df, uservalue):
     size_df_mse_lst = []
@@ -349,14 +350,14 @@ def find_mse_in_size_df(df, uservalue):
         mse = mean_squared_error(np.asarray(df.iloc[i,:]), uservalue)
         size_df_mse_lst.append(mse)
     print(size_df_mse_lst)
-    return print('ÃÖÁ¾ÃßÃµ »çÀÌÁî:',size[size_df_mse_lst.index(min(size_df_mse_lst))])
+    return print('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:',size[size_df_mse_lst.index(min(size_df_mse_lst))])
 # %%
 find_mse_in_size_df(hood_size_df, userPrediction_allSize)
 # %%
 userPrediction_allSize
 # %%
 '''
-¾Æ·¡´Â ÅÂ³²¾º df »öÄ¥ÄÚµå-> Àßµ¹¾Æ°©´Ï´Ù
+ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½Â³ï¿½ï¿½ï¿½ df ï¿½ï¿½Ä¥ï¿½Úµï¿½-> ï¿½ßµï¿½ï¿½Æ°ï¿½ï¿½Ï´ï¿½
 '''
 # def find_nearest(array, value):
 #     array = np.asarray(array)
@@ -396,4 +397,4 @@ userPrediction_allSize
 #     return [highlight if e == nearest_value else default for e in series]
 
 
-# hood_size_df.style.apply(df_coloring_length, subset=["ÃÑÀå"], axis=0).apply(df_coloring_shoulder, subset=["¾î±ú³Êºñ"], axis=0).apply(df_coloring_bl, subset=["°¡½¿´Ü¸é"], axis=0).apply(df_coloring_sleeve, subset=["¼Ò¸Å±æÀÌ"], axis=0)
+# hood_size_df.style.apply(df_coloring_length, subset=["ï¿½ï¿½ï¿½ï¿½"], axis=0).apply(df_coloring_shoulder, subset=["ï¿½ï¿½ï¿½ï¿½Êºï¿½"], axis=0).apply(df_coloring_bl, subset=["ï¿½ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½"], axis=0).apply(df_coloring_sleeve, subset=["ï¿½Ò¸Å±ï¿½ï¿½ï¿½"], axis=0)

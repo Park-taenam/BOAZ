@@ -12,7 +12,6 @@ Reference
     - Dimensionality Reduction with Neighborhood Components Analysis
         - https://scikit-learn.org/stable/auto_examples/neighbors/plot_nca_dim_reduction.html
 '''
-
 # %% Import
 # from nltk.corpus import stopwords
 # import datetime

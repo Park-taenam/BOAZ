@@ -9,14 +9,13 @@ import warnings
 warnings.filterwarnings("ignore")
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
-
-# ½Ã°¢È­ °ü·Ã
+# ï¿½Ã°ï¿½È­ ï¿½ï¿½ï¿½ï¿½
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 from collections import Counter
 from PIL import Image
 from matplotlib import rc
 
-# ±×·¡ÇÁ¿¡¼­ ÇÑ±Û ÆùÆ® ±úÁö´Â ¹®Á¦¿¡ ´ëÇÑ ´ëÃ³(Àü¿ª ±Û²Ã ¼³Á¤)
+# ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ±ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã³(ï¿½ï¿½ï¿½ï¿½ ï¿½Û²ï¿½ ï¿½ï¿½ï¿½ï¿½)
 import matplotlib.font_manager as fm
 import warnings
 warnings.filterwarnings(action='ignore') 
@@ -39,11 +38,11 @@ import re, os, sys, json
 
 from hanspell import spell_checker
 
-from konlpy.tag import Kkma #ÇüÅÂ¼ÒºÐ¼®
-from konlpy.tag import Okt #ÇüÅÂ¼ÒºÐ¼®
-import soynlp; from soynlp.normalizer import * #Á¤±ÔÈ­
-# from pykospacing import Spacing------------------>½á¾ßÇÔ!
-# spacing = Spacing()------------------------------>½á¾ßÇÔ!
+from konlpy.tag import Kkma #ï¿½ï¿½ï¿½Â¼ÒºÐ¼ï¿½
+from konlpy.tag import Okt #ï¿½ï¿½ï¿½Â¼ÒºÐ¼ï¿½
+import soynlp; from soynlp.normalizer import * #ï¿½ï¿½ï¿½ï¿½È­
+# from pykospacing import Spacing------------------>ï¿½ï¿½ï¿½ï¿½ï¿½!
+# spacing = Spacing()------------------------------>ï¿½ï¿½ï¿½ï¿½ï¿½!
 
 from konlpy.tag import Komoran, Hannanum, Kkma, Okt
 komoran = Komoran(); hannanum = Hannanum(); kkma = Kkma(); okt = Okt();
@@ -52,27 +51,27 @@ def denim_crawlingdataconcat():
     df = pd.DataFrame()
     for i in range(1,21,1):
         try:
-            df_before = pd.read_csv('data/denim_page'+str(i)+'.csv') #Å©·Ñ¸µÆÄÀÏ ºÒ·¯¿À±â
+            df_before = pd.read_csv('data/denim_page'+str(i)+'.csv') #Å©ï¿½Ñ¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
             print('df',str(i),': ',df_before.shape,end = ',')
         except:
-            df_before = pd.DataFrame() #¾ÆÁ÷Å©·Ñ¸µµÇÁö ¾ÊÀºÆÄÀÏÀº ºó df
+            df_before = pd.DataFrame() #ï¿½ï¿½ï¿½ï¿½Å©ï¿½Ñ¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ df
             print('df',str(i),': ',df_before.shape)
             
-        df = pd.concat([df,df_before]) #ÇÕÄ¡±â
+        df = pd.concat([df,df_before]) #ï¿½ï¿½Ä¡ï¿½ï¿½
             
 
             
-    print('¸ðµÎÇÕÄ£df : ', df.shape)
+    print('ï¿½ï¿½ï¿½ï¿½ï¿½Ä£df : ', df.shape)
     df.drop_duplicates(subset = None,keep = 'first', inplace = True,ignore_index = True)
-    print('Áßº¹Á¦°Ådf : ', df.shape)#ÀüÃ¼¿­ÀÌ °°Àº Áßº¹Á¦°Å
-    #¼ºº°, Å°,¸ö¹«°Ô ¸ðµÎ null¾Æ´Ï°í ¼öÄ¡Á¾·ù Àû¾îµµ ÇÏ³ª °ªÀÌ ÀÖ´Â °Íµé filter
+    print('ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½df : ', df.shape)#ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½
+    #ï¿½ï¿½ï¿½ï¿½, Å°,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ nullï¿½Æ´Ï°ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½îµµ ï¿½Ï³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Íµï¿½ filter
     df = df[~df['gender'].isnull()&~df['height'].isnull()&~df['weight'].isnull()&
-                                      (~df['ÃÑÀå'].isnull()|
-                                       ~df['Çã¸®´Ü¸é'].isnull()|~df['Çã¹÷Áö´Ü¸é'].isnull()|
-                                       ~df['¹ØÀ§'].isnull()|
-                                       ~df['¹Ø´Ü´Ü¸é'].isnull()|
-                                       ~df['¾ûµ¢ÀÌ´Ü¸é'].isnull())]
-    print('ÃÖÁ¾»ç¿ë data:{}'.format(df.shape))
+                                      (~df['ï¿½ï¿½ï¿½ï¿½'].isnull()|
+                                       ~df['ï¿½ã¸®ï¿½Ü¸ï¿½'].isnull()|~df['ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½'].isnull()|
+                                       ~df['ï¿½ï¿½ï¿½ï¿½'].isnull()|
+                                       ~df['ï¿½Ø´Ü´Ü¸ï¿½'].isnull()|
+                                       ~df['ï¿½ï¿½ï¿½ï¿½ï¿½Ì´Ü¸ï¿½'].isnull())]
+    print('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ data:{}'.format(df.shape))
     print('-'*10)
     return df
 
@@ -81,24 +80,24 @@ def denim_crawlingdataconcat():
 # %%
 
 def crawlingdataprocessing(df):
-    #kg,cmÁ¦°Å ¹× ¼öÄ¡Å¸ÀÔÀ¸·Î º¯°æ
+    #kg,cmï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ä¡Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     df["height"]=df["height"].replace('cm','',regex = True)
     df["weight"]=df["weight"].replace('kg','',regex = True)
     df= df.astype({'height':'float','weight':'float'})
-    print('dfÀüÃ³¸®¿Ï·á')
+    print('dfï¿½ï¿½Ã³ï¿½ï¿½ï¿½Ï·ï¿½')
     print('-'*10)
     return df
 
 def add_reviewcol(df):
-    df = df.drop_duplicates(subset=['content'])#¸®ºäÁßº¹Á¦°Å
-    print('°°Àº³»¿ë¸®ºä Áßº¹Á¦°Å ¿Ï·á')
+    df = df.drop_duplicates(subset=['content'])#ï¿½ï¿½ï¿½ï¿½ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½
+    print('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¸®ï¿½ï¿½ ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½')
     df.reset_index(drop=True, inplace=True)
 
     df['review'] = str('')
-    #¿Ü±¹¾î ¸®ºä »èÁ¦
+    #ï¿½Ü±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     i = 0; nohangul = []
     for i in range(df.shape[0]):
-        text = re.sub('[^¤¡-¤Ó°¡-ÆR]', '',df.iloc[i,8])
+        text = re.sub('[^ï¿½ï¿½-ï¿½Ó°ï¿½-ï¿½R]', '',df.iloc[i,8])
         if(text==''):
             nohangul.append(i)
     df = df.iloc[[True if i not in nohangul else False for i in range(df.shape[0])],:]
@@ -107,13 +106,13 @@ def add_reviewcol(df):
     i=0
     for i in range(df.shape[0]):
         text = df.iloc[i,7]
-        text = re.sub(pattern='[^\w\s\n]', repl='', string=text) #Æ¯¼ö¹®ÀÚ Á¦°Å
-        text = re.sub(pattern='[^¤¡-¤¾¤¿-¤Ó°¡-ÆRa-zA-Z]', repl=' ', string=text) #¼ýÀÚ, ±×ÀÌ¿Ü »èÁ¦
-        text = re.sub(pattern='[¤¡-¤¾¤¿-¤Ó]+', repl='', string=text) #´Ü¼ø ¸ðÀ½, ÀÚÀ½ »èÁ¦
-        text = repeat_normalize(text, num_repeats=2) #ºÒÇÊ¿ä¹Ýº¹¹®ÀÚÁ¤±ÔÈ­
-        #text = spacing(text) #¶ç¾î¾²±â------------------------>½á¾ßÇÔ!
+        text = re.sub(pattern='[^\w\s\n]', repl='', string=text) #Æ¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        text = re.sub(pattern='[^ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½-ï¿½Ó°ï¿½-ï¿½Ra-zA-Z]', repl=' ', string=text) #ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ì¿ï¿½ ï¿½ï¿½ï¿½ï¿½
+        text = re.sub(pattern='[ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½]+', repl='', string=text) #ï¿½Ü¼ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        text = repeat_normalize(text, num_repeats=2) #ï¿½ï¿½ï¿½Ê¿ï¿½Ýºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È­
+        #text = spacing(text) #ï¿½ï¿½î¾²ï¿½ï¿½------------------------>ï¿½ï¿½ï¿½ï¿½ï¿½!
         df['review'][i] = text
-    print('¸®ºä ÀüÃ³¸® ¿­ Ãß°¡')
+    print('ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã³ï¿½ï¿½ ï¿½ï¿½ ï¿½ß°ï¿½')
     print('df shape:{}'.format(df.shape))
     print('-'*10)
     return df
@@ -125,5 +124,5 @@ df = crawlingdataprocessing(df)
 df_before_nlp = add_reviewcol(df)
 df_before_nlp_origin = df_before_nlp.copy()
 # %%
-df_before_nlp.to_csv('data/denim¾ð¾î»çÀü¸¸µé±â¿ë_ÀüÃ³¸®¿Ï.csv',encoding = 'UTF-8',index=False)
+df_before_nlp.to_csv('data/denimï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½Ã³ï¿½ï¿½ï¿½ï¿½.csv',encoding = 'UTF-8',index=False)
 # %%

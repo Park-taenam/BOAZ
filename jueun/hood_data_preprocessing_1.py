@@ -8,14 +8,13 @@ import warnings
 warnings.filterwarnings("ignore")
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
-
-# ½Ã°¢È­ °ü·Ã
+# ï¿½Ã°ï¿½È­ ï¿½ï¿½ï¿½ï¿½
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 from collections import Counter
 from PIL import Image
 from matplotlib import rc
 
-# ±×·¡ÇÁ¿¡¼­ ÇÑ±Û ÆùÆ® ±úÁö´Â ¹®Á¦¿¡ ´ëÇÑ ´ëÃ³(Àü¿ª ±Û²Ã ¼³Á¤)
+# ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ±ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã³(ï¿½ï¿½ï¿½ï¿½ ï¿½Û²ï¿½ ï¿½ï¿½ï¿½ï¿½)
 import matplotlib.font_manager as fm
 import warnings
 warnings.filterwarnings(action='ignore') 
@@ -38,11 +37,11 @@ import re, os, sys, json
 
 from hanspell import spell_checker
 
-from konlpy.tag import Kkma #ÇüÅÂ¼ÒºÐ¼®
-from konlpy.tag import Okt #ÇüÅÂ¼ÒºÐ¼®
-import soynlp; from soynlp.normalizer import * #Á¤±ÔÈ­
-# from pykospacing import Spacing------------------>½á¾ßÇÔ!
-# spacing = Spacing()------------------------------>½á¾ßÇÔ!
+from konlpy.tag import Kkma #ï¿½ï¿½ï¿½Â¼ÒºÐ¼ï¿½
+from konlpy.tag import Okt #ï¿½ï¿½ï¿½Â¼ÒºÐ¼ï¿½
+import soynlp; from soynlp.normalizer import * #ï¿½ï¿½ï¿½ï¿½È­
+# from pykospacing import Spacing------------------>ï¿½ï¿½ï¿½ï¿½ï¿½!
+# spacing = Spacing()------------------------------>ï¿½ï¿½ï¿½ï¿½ï¿½!
 
 from konlpy.tag import Komoran, Hannanum, Kkma, Okt
 komoran = Komoran(); hannanum = Hannanum(); kkma = Kkma(); okt = Okt();
@@ -52,37 +51,37 @@ def hood_crawlingdataconcat():
     df = pd.DataFrame()
     for i in range(1,21,1):
         try:
-            df_before = pd.read_csv('data/hood_'+str(i)+'page.csv') #Å©·Ñ¸µÆÄÀÏ ºÒ·¯¿À±â
+            df_before = pd.read_csv('data/hood_'+str(i)+'page.csv') #Å©ï¿½Ñ¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
             print('df',str(i),': ',df_before.shape,end = ',')
         except:
-            df_before = pd.DataFrame() #¾ÆÁ÷Å©·Ñ¸µµÇÁö ¾ÊÀºÆÄÀÏÀº ºó df
+            df_before = pd.DataFrame() #ï¿½ï¿½ï¿½ï¿½Å©ï¿½Ñ¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ df
             print('df',str(i),': ',df_before.shape)
             
-        df = pd.concat([df,df_before]) #ÇÕÄ¡±â
+        df = pd.concat([df,df_before]) #ï¿½ï¿½Ä¡ï¿½ï¿½
             
 
             
-    print('¸ðµÎÇÕÄ£df : ', df.shape)
+    print('ï¿½ï¿½ï¿½ï¿½ï¿½Ä£df : ', df.shape)
     df.drop_duplicates(subset = None,keep = 'first', inplace = True,ignore_index = True)
-    print('Áßº¹Á¦°Ådf : ', df.shape)#ÀüÃ¼¿­ÀÌ °°Àº Áßº¹Á¦°Å
-    #¼ºº°,Å°,¸ö¹«°Ô ¸ðµÎ null¾Æ´Ï°í ¼öÄ¡Á¾·ù ÇÏ³ª¶óµµ null¾Æ´Ñ °Í ÇÊÅÍ
+    print('ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½df : ', df.shape)#ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½
+    #ï¿½ï¿½ï¿½ï¿½,Å°,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ nullï¿½Æ´Ï°ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ nullï¿½Æ´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     df = df[~df['gender'].isnull()&~df['height'].isnull()&~df['weight'].isnull()&
-                                      (~df['ÃÑÀå'].isnull()|
-                                       ~df['¾î±ú³Êºñ'].isnull()|~df['°¡½¿´Ü¸é'].isnull()|
-                                       ~df['¼Ò¸Å±æÀÌ'].isnull())]
-    print('ÃÖÁ¾»ç¿ë data:{}'.format(df.shape))
+                                      (~df['ï¿½ï¿½ï¿½ï¿½'].isnull()|
+                                       ~df['ï¿½ï¿½ï¿½ï¿½Êºï¿½'].isnull()|~df['ï¿½ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½'].isnull()|
+                                       ~df['ï¿½Ò¸Å±ï¿½ï¿½ï¿½'].isnull())]
+    print('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ data:{}'.format(df.shape))
     print('-'*10)
     return df
 
 
 def crawlingdataprocessing(df):
-    #kg,cmÁ¦°Å ¹× ¼öÄ¡Å¸ÀÔÀ¸·Î º¯°æ
-    df['gender']=df['gender'].apply(lambda x:x.replace("³²¼º","1"))  
-    df['gender']=df['gender'].apply(lambda x:x.replace("¿©¼º","0"))  
+    #kg,cmï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ä¡Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    df['gender']=df['gender'].apply(lambda x:x.replace("ï¿½ï¿½ï¿½ï¿½","1"))  
+    df['gender']=df['gender'].apply(lambda x:x.replace("ï¿½ï¿½ï¿½ï¿½","0"))  
     df["height"]=df["height"].replace('cm','',regex = True)
     df["weight"]=df["weight"].replace('kg','',regex = True)
     df= df.astype({'gender':'int','height':'float','weight':'float'})
-    print('dfÀüÃ³¸®¿Ï·á')
+    print('dfï¿½ï¿½Ã³ï¿½ï¿½ï¿½Ï·ï¿½')
     print('-'*10)
     return df
 # %%

@@ -1,5 +1,5 @@
 # %%
-##################È¯°æ¼³Á¤#################################
+##################È¯ï¿½æ¼³ï¿½ï¿½#################################
 import warnings
 warnings.filterwarnings("ignore")
 from selenium import webdriver
@@ -12,9 +12,8 @@ import pandas as pd
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from html_table_parser import parser_functions as parser
-
 # %%
- ###################ÇÔ¼öÁ¤ÀÇ###########################
+ ###################ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½###########################
  #user, gender,height,weight,item, size,content, evaluation(size_eval,bright_eval,color_eval,thick_eval)
 user_list = []
 gender_list =[]
@@ -28,15 +27,15 @@ size_eval_list =[]
 bright_eval_list =[]
 color_eval_list =[]
 thick_eval_list =[]
-#ÇÔ¼öÁ¤ÀÇ
+#ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½
 def get_content(driver):
-    #ÇÔ¼ö¾È¿¡ html, soup ³Ö¾î³ö¾ß ÆäÀÌÁö ³Ñ¾î°¡¼­ ¹Ù¸£°Ô ±Ü¾î¿È, ¹Û¿¡ »©³õÀ¸¸é Ã¹ÆäÀÌÁö¸¸ ¿©·¯¹ø ±Ü¾îÁø´Ù.
+    #ï¿½Ô¼ï¿½ï¿½È¿ï¿½ html, soup ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½ ï¿½Ù¸ï¿½ï¿½ï¿½ ï¿½Ü¾ï¿½ï¿½, ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü¾ï¿½ï¿½ï¿½ï¿½ï¿½.
     html = driver.page_source
     soup = BeautifulSoup(html,'lxml')
     for i in range(10):
     
     #profile(gender,height,weight)
-    #<p class="review-profile__body_information">³²¼º, 177cm, 85kg</p>
+    #<p class="review-profile__body_information">ï¿½ï¿½ï¿½ï¿½, 177cm, 85kg</p>
         profile_before = soup.find_all('p','review-profile__body_information')
         profile_after = profile_before[i].text.split(',')
         try:
@@ -47,15 +46,15 @@ def get_content(driver):
             gender = ''
             height = ''
             weight = ''
-#user :<p class="review-profile__name">LV 2 ´ººñ_95f88e16</p>           
-#item: #/<a href="https://www.musinsa.com/app/goods/1231416/0" class="review-goods-information__name">Å×ÀÌÆÛµå È÷µç ¹êµù Å©·Ó ½½·¢½º [´õ½ºÆ¼ º£ÀÌÁö]</a>
+#user :<p class="review-profile__name">LV 2 ï¿½ï¿½ï¿½ï¿½_95f88e16</p>           
+#item: #/<a href="https://www.musinsa.com/app/goods/1231416/0" class="review-goods-information__name">ï¿½ï¿½ï¿½ï¿½ï¿½Ûµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ [ï¿½ï¿½ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]</a>
 #size :<span class="review-goods-information__option">
 #content
 
         try:
             user = soup.find_all('p','review-profile__name')[i].text
             item = soup.find_all('a','review-goods-information__name')[i].text
-            # '/n' ¾ø¾Ö°í ÃßÃâÇÏ±â
+            # '/n' ï¿½ï¿½ï¿½Ö°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
             size = soup.find_all('span', 'review-goods-information__option')[i].text.strip().replace('\n','')
             content = soup.find_all('div','review-contents__text')[i].text
         except:
@@ -65,8 +64,8 @@ def get_content(driver):
             content = ''
             
         #star
-#->º° 5°³ÀÏ¶§:<span class="review-list__rating__active" style="width: 100%"></span>
-#->º° 4°³ÀÏ¶§:<span class="review-list__rating__active" style="width: 80%"></span>
+#->ï¿½ï¿½ 5ï¿½ï¿½ï¿½Ï¶ï¿½:<span class="review-list__rating__active" style="width: 100%"></span>
+#->ï¿½ï¿½ 4ï¿½ï¿½ï¿½Ï¶ï¿½:<span class="review-list__rating__active" style="width: 80%"></span>
         stars = driver.find_elements_by_xpath('//*[@id="reviewListFragment"]/div['+str(i+1)+']/div[3]/span/span/span')
         try:
             for j in stars:
@@ -114,42 +113,42 @@ def get_content(driver):
   
    
         
-#¹öÆ° ´©¸£±â ÇÔ¼öÁ¤ÀÇ
+#ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½
 def move_next(driver):    
     for p in range(4):
         get_content(driver)
-        #ÆäÀÌÁö 2,3,4,5 ³Ñ¾î°¡±â
+        #ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2,3,4,5 ï¿½Ñ¾î°¡ï¿½ï¿½
         driver.find_element_by_css_selector('#reviewListFragment > div.nslist_bottom > div.pagination.textRight > div > a:nth-child(' + 
                                             str(int(4) + int(p)) + ')').send_keys(Keys.ENTER)
         time.sleep(2)
     get_content(driver)
     
-#±×´ÙÀ½ È­»ìÇ¥'>'¹öÆ°´©¸£±â: (6,7,8...)ÀÖ´Â ÆäÀÌÁö·Î ³Ñ¾î°¡±â   
+#ï¿½×´ï¿½ï¿½ï¿½ È­ï¿½ï¿½Ç¥'>'ï¿½ï¿½Æ°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: (6,7,8...)ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½   
 def move_arrow(driver):
     driver.find_element_by_css_selector('#reviewListFragment > div.nslist_bottom > div.pagination.textRight > div > a.fa.fa-angle-right.paging-btn.btn.next').send_keys(Keys.ENTER)
 
 
 # %%
-##########################Å©·Ñ¸µ½ÃÀÛ##############################
-#-----------------------# :¹Ù²Üº¯¼öÇ¥½ÃÃ¢ÀÔ´Ï´Ù.
+##########################Å©ï¿½Ñ¸ï¿½ï¿½ï¿½ï¿½ï¿½##############################
+#-----------------------# :ï¿½Ù²Üºï¿½ï¿½ï¿½Ç¥ï¿½ï¿½Ã¢ï¿½Ô´Ï´ï¿½.
  
 final_df = pd.DataFrame() 
-#8ÆäÀÌÁö
+#8ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 options = webdriver.ChromeOptions()
 options.add_experimental_option("excludeSwitches", ["enable-logging"])
 driver = webdriver.Chrome(options=options)
-#--------------------------------º»ÀÎÇØ´ç page url·Î¹Ù²Ù±â-----------------------#
+#--------------------------------ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½ page urlï¿½Î¹Ù²Ù±ï¿½-----------------------#
 driver.get('https://www.musinsa.com/categories/item/001004?d_cat_cd=001004&brand=&list_kind=small&sort=emt_high&sub_sort=&page=8&display_cnt=90&group_sale=&exclusive_yn=&sale_goods=&timesale_yn=&ex_soldout=&kids=&color=&price1=&price2=&shoeSizeOption=&tags=&campaign_id=&includeKeywords=&measure=')
 time.sleep(3)
 
 start = time.time()
 math.factorial(100000)
 
-#-----------------item_cnt: »óÇ°°³¼ö + 1·Î ¹Ù²Ù±â #90°³-> 91------------#
+#-----------------item_cnt: ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ + 1ï¿½ï¿½ ï¿½Ù²Ù±ï¿½ #90ï¿½ï¿½-> 91------------#
 item_cnt = 51 
-#-----------------range(½ÃÀÛ¾ÆÀÌÅÛ°³¼ö,,)¹Ù²Ù±â------------------------#
+#-----------------range(ï¿½ï¿½ï¿½Û¾ï¿½ï¿½ï¿½ï¿½Û°ï¿½ï¿½ï¿½,,)ï¿½Ù²Ù±ï¿½------------------------#
 for t in range(1,item_cnt,1):
-    #ÈÄ±â¼ø 90°³ ÀÚµ¿À¸·Î Å¬¸¯ÇÏ±â
+    #ï¿½Ä±ï¿½ï¿½ 90ï¿½ï¿½ ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ï±ï¿½
 # #searchList > li:nth-child(1) > div.li_inner > div.list_img > a > img
 # #searchList > li:nth-child(90) > div.li_inner > div.list_img > a > img
     
@@ -161,21 +160,21 @@ for t in range(1,item_cnt,1):
     except:
         continue
    
-#ÀÏ´Ü ºó°ø°£ Å¬¸¯->Ã¢ÀÌ ·£´ýÀ¸·Î ¶ß±â ¶§¹®¿¡ ºó°÷À» Å¬¸¯ÇÏ¸é ÆË¾÷ÀÌ ¶ß´Â °æ¿ì°¡ ÀÖÀ½
+#ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½->Ã¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Ë¾ï¿½ï¿½ï¿½ ï¿½ß´ï¿½ ï¿½ï¿½ì°¡ ï¿½ï¿½ï¿½ï¿½
     driver.find_element_by_xpath('//*[@id="product_order_info"]/div[1]/h4')
     time.sleep(2)
     try:
-        #¹«½Å»çÄíÆù ÆË¾÷Ã¢: ÇØ´ç ÆË¾÷ÀÌ ¶ß¸é ³ª¸ÓÁö ¼±ÅÃ ¾ÈµÊ
+        #ï¿½ï¿½ï¿½Å»ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½Ã¢: ï¿½Ø´ï¿½ ï¿½Ë¾ï¿½ï¿½ï¿½ ï¿½ß¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Èµï¿½
         driver.find_element_by_xpath('/html/body/div/div/div/button').click()
         time.sleep(2)
-        #ÀÔ°íÁö¿¬ÆË¾÷Ã¢: »èÁ¦¾ÈÇØµµ ³ª¸ÓÁö ±¸µ¿ °¡´É
+        #ï¿½Ô°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¾ï¿½Ã¢: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         #driver.find_element_by_xpath('//*[@id="divpop_goods_niceghostclub_8451"]/form/button[2]').click()
-        #¹«½Å»çÈ¸¿øÇýÅÃ ÆË¾÷Ã¢ :»èÁ¦¾ÈÇØµµ ³ª¸ÓÁö ±¸µ¿°¡´É
+        #ï¿½ï¿½ï¿½Å»ï¿½È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½Ã¢ :ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         #driver.find_element_by_xpath('//*[@id="page_product_detail"]/div[3]/div[23]/div/a[1]/img').click()
     except:
         pass
         
-        #»çÀÌÁîÇ¥
+        #ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¥
     try:
         html = driver.page_source
         soup = BeautifulSoup(html,'html.parser')
@@ -184,9 +183,9 @@ for t in range(1,item_cnt,1):
         figure_df = pd.DataFrame(data = p[1:],columns = p[0])
         figure_df.drop([0,1],inplace = True)
     except:
-        print("»çÀÌÁîÇ¥ ¿À·ù¹ß»ý")
+        print("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ß»ï¿½")
         
-        #¸®ºä°³¼ö
+        #ï¿½ï¿½ï¿½ä°³ï¿½ï¿½
     try:
         reviewNum = driver.find_element_by_xpath('//*[@id="estimate_style"]')
         reviewNum = reviewNum.text
@@ -194,7 +193,7 @@ for t in range(1,item_cnt,1):
         reviewNum = int(reviewNum)
         
     except:
-        print("¸®ºä°³¼ö ¿À·ù¹ß»ý")
+        print("ï¿½ï¿½ï¿½ä°³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß»ï¿½")
         reviewNum = 0
         
 
@@ -211,12 +210,12 @@ for t in range(1,item_cnt,1):
     color_eval_list =[]
     thick_eval_list =[]
         
-    #----------------- b:±âÁØÀ¸·Î ÀâÀº ½ºÅ¸ÀÏÈÄ±â¸®ºä °³¼ö,¿ì¸®´Â 100°³------------# 
+    #----------------- b:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½Ä±â¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½,ï¿½ì¸®ï¿½ï¿½ 100ï¿½ï¿½------------# 
     b = 100  
     
     if reviewNum >= b:
-        #Å©·Ñ¸µ
-        #1:50°³, 2:100°³, 10:500°³, 
+        #Å©ï¿½Ñ¸ï¿½
+        #1:50ï¿½ï¿½, 2:100ï¿½ï¿½, 10:500ï¿½ï¿½, 
         for k in range(2):
             try:
                 move_next(driver)
@@ -228,7 +227,7 @@ for t in range(1,item_cnt,1):
         pass
         
 
-    print(str(t),'¹øÂ°Á¦Ç° ¸®ºä',reviewNum,'°³')
+    print(str(t),'ï¿½ï¿½Â°ï¿½ï¿½Ç° ï¿½ï¿½ï¿½ï¿½',reviewNum,'ï¿½ï¿½')
     
     a = t      
     time.sleep(2)    
@@ -244,12 +243,12 @@ for t in range(1,item_cnt,1):
                                             'bright_eval':bright_eval_list,
                                             'color_eval':color_eval_list,
                                             'thick_eval':thick_eval_list})          
-    #»çÀÌÁîÇ¥¿Í ¸®ºä merge
+    #ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ merge
     globals()["merge_df"+str(a)] = pd.merge(globals()["df" + str(a)],figure_df,how = 'left',left_on = 'size',right_on = 'cm')
     print('df',a,'shape',globals()["merge_df"+str(a)].shape)
     
     final_df = pd.concat([final_df, globals()["merge_df"+str(a)]])
-    #µÚ·Î°¡±â
+    #ï¿½Ú·Î°ï¿½ï¿½ï¿½
     driver.back()
     time.sleep(3)
           
@@ -257,12 +256,12 @@ for t in range(1,item_cnt,1):
 
 end = time.time()
 print(f"{end - start:.5f} sec")
-final_df.drop_duplicates(subset = None,keep = 'first', inplace = True,ignore_index = True) #Áßº¹¾ÆÀÌÅÛ Á¦°Å
-print('ÃÖÁ¾°³¼ö:',final_df.shape) #ÃÖÁ¾ data: final_df
+final_df.drop_duplicates(subset = None,keep = 'first', inplace = True,ignore_index = True) #ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+print('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:',final_df.shape) #ï¿½ï¿½ï¿½ï¿½ data: final_df
 driver.quit()  
 
 # %%
-#------------------ÆÄÀÏÀÌ¸§¹Ù²Ù±â-----------------------------#
+#------------------ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ï¿½Ù²Ù±ï¿½-----------------------------#
 final_df.to_csv("data/40_50_8page.csv", encoding="UTF-8", index=False)
 
 # %%

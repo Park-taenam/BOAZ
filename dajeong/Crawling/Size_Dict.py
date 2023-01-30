@@ -18,7 +18,6 @@ from hanspell import spell_checker #맞춤법
 from konlpy.tag import Komoran, Hannanum, Kkma, Okt
 komoran = Komoran(); hannanum = Hannanum(); kkma = Kkma(); okt = Okt()
 
-
 # %%
 ###################################
 #데이터 불러오기
@@ -164,6 +163,4 @@ arm       = sizedict_nodup(arm)
 chest     = sizedict_nodup(chest)
 small     = sizedict_nodup(small)
 big       = sizedict_nodup(big)
-
-
 

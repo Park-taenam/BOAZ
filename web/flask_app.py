@@ -8,7 +8,6 @@ import os
 
 from Recsys import *
 # %%
-
 app = Flask(__name__)
 
 dir_containing_file = r'c:\Users\User\Desktop\BOAZ\Adv\Project_SiZoAH\web'

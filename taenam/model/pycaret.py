@@ -9,6 +9,7 @@ from pycaret.regression import *
 
 import warnings
 warnings.filterwarnings("ignore")
+
 # %%
 def preprocessing(df):
     df = df.astype({'chongjang_big':'int',

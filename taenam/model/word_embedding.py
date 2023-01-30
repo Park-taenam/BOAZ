@@ -6,6 +6,7 @@ from gensim.models import Word2Vec
 from gensim.models import FastText
 from konlpy.tag import Okt
 from tqdm import tqdm
+
 # %%
 data_top1_df = pd.read_csv('./data/mutandard_top1.csv', encoding='cp949', index_col=0)
 data_top2_df = pd.read_csv('./data/mutandard_top2.csv', encoding='cp949', index_col=0)
