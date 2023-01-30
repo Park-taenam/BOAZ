@@ -1,28 +1,28 @@
 ## BOAZ ADV - Size Recommendation System
 
 > Crawling.py
-* 크롤링 : 무신사 -> 랭킹 -> 후드 티셔츠 -> 후기순 -> page
+> * 크롤링 : 무신사 -> 랭킹 -> 후드 티셔츠 -> 후기순 -> page
 
 > Preprocess.py
-* Data Preprocessing
-* data_preprocessing_done.pkl
+> * Data Preprocessing
+> * data_preprocessing_done.pkl
 
 > NLP.py
-* 사이즈 언어사전 구축
-* 사이즈 키워드 추출 & 크기 키워드 추출
-* data_review_preprocessing_done.pkl
+> * 사이즈 언어사전 구축
+> * 사이즈 키워드 추출 & 크기 키워드 추출
+> * data_review_preprocessing_done.pkl
 
 > ModelSelection.py
-* Pycaret
-* 모델 학습 및 저장
-* 가중치 산출
+> * Pycaret
+> * 모델 학습 및 저장
+> * 가중치 산출
 
 > Recsys.py
-* Size Recommendation
+> * Size Recommendation
 
 > Web
-* flask
-* pythonAnywhere
+> * flask
+> * pythonAnywhere
 
 ### Web
 Link : <http://sizerecsys.pythonanywhere.com/>
