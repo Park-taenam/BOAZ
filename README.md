@@ -26,6 +26,6 @@
 > * pythonAnywhere
 
 ### Web
-**Link : <http://sizerecsys.pythonanywhere.com/**
+**Link : <http://sizerecsys.pythonanywhere.com/>**
 
 ![image](https://user-images.githubusercontent.com/79789743/215373745-e2d553f0-892a-481f-8224-ae4f4af10a28.png)
